@@ -44,10 +44,16 @@ export default class Create extends Component<CreateProps, {
 					<input placeholder="Tutorial Name"/>
 				</Container>
 				<Container>
-					<textarea className="code"/>
+					<div className="box">
+						<div className="editor">
+							
+						</div>
+						<hr/>
+						<textarea className="code"/>
+					</div>
 				</Container>
 				<Container>
-					<textarea className="output" disabled={true} value={`Output:\n${this.state.output || ''}`}/>
+					<textarea className="output box" disabled={true} value={`Output:\n${this.state.output || ''}`}/>
 				</Container>
 			</Page>
 		);

@@ -114,6 +114,27 @@ body {
 		background-color: transparent;
 	}
 	
+	.box {
+		box-shadow: $zDepth2;
+		
+		display: flex;
+		flex-direction: column;
+	}
+	
+	hr {
+		height: 1px;
+		background-color: $grey;
+		margin: 0;
+		padding: 0;
+		border: none;
+	}
+	
+	.editor {
+		height: 48px;
+		width: 100%;
+		background-color: $light;
+	}
+	
 	textarea {
 		width: calc(100% - 2 * $surround);
 		
@@ -122,8 +143,6 @@ body {
 		color: $dark;
 		
 		padding: $surround;
-	
-		box-shadow: $zDepth2;
 		
 		font-size: 18px;
 		
