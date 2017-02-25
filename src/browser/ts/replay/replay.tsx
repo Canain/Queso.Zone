@@ -144,7 +144,7 @@ export default class Replay extends Component<{
 		return (
 			<Page redirect={this.props.params ? null : '/'} className="replay" title="Replay">
 				<Container>
-					<h3>{this.state.name || 'Untitled'}</h3>
+					<input value={this.state.name || 'Untitled'} disabled={true}/>
 				</Container>
 				<Container>
 					<div className="editor box">

@@ -186,7 +186,7 @@ textarea:disabled {
 $inputHeight: 48px;
 $inputSize: 24px;
 
-.record {
+.record, .replay {
 	input {
 		height: $inputHeight;
 		width: 100%;
@@ -206,6 +206,17 @@ $inputSize: 24px;
 		}
 		
 		background-color: transparent;
+	}
+}
+
+.replay {
+	input {
+		border-bottom: none;
+		
+		&:focus {
+			border-bottom: none;
+			margin-bottom: 0;
+		}
 	}
 }
 
