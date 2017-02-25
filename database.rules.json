@@ -1,0 +1,6 @@
+{
+  "rules": {
+    ".write": "auto !== null",
+    ".read": "true"
+  }
+}
