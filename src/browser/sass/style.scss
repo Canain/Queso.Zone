@@ -49,6 +49,18 @@ body {
 		
 		height: $height;
 		
+		> div {
+			display: flex;
+		
+			> div {
+				padding-right: $surround;
+				
+				&:last-of-type {
+					padding-right: 0;
+				}
+			}
+		}
+		
 		a {
 			color: $light;
 			text-decoration: none;
@@ -58,9 +70,11 @@ body {
 			margin: 0;
 			line-height: $height;
 		}
-		
-		h2 {
-		}
 	}
 }
 
+.notfound {
+	.container {
+		text-align: center;
+	}
+}

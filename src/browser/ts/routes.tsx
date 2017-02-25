@@ -5,6 +5,11 @@ import * as ReactGA from 'react-ga';
 import Welcome from './welcome/welcome';
 import Replay from './replay/replay';
 import NotFound from './notfound/notfound';
+import Create from './create/create';
+
+// ReactGA.initialize('', {
+// 	debug: process.env.NODE_ENV !== 'production'
+// });
 
 export default class Routes extends Component<{}, {}> {
 	
@@ -17,7 +22,8 @@ export default class Routes extends Component<{}, {}> {
 		return (
 			<Router history={browserHistory} onUpdate={this.attach(this.onUpdate)}>
 				<Route path="/" component={Welcome}/>
-				<Route path="/r(/:replay)" component={Replay}/>
+				<Route path="/r(/:id)" component={Replay}/>
+				<Route path="/create(/:id)" component={Create}/>
 				<Route path='*' component={NotFound}/>
 			</Router>
 		);

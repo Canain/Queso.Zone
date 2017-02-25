@@ -42,12 +42,6 @@ export default class Toolbar extends Component<{}, {
 		});
 	}
 	
-	async onCreate() {
-		await this.update({
-			disabled: true
-		});
-	}
-	
 	render() {
 		return (
 			<div className="toolbar">
@@ -56,6 +50,13 @@ export default class Toolbar extends Component<{}, {
 						<Link to="/"><h1>Queso</h1></Link>
 					</div>
 					<div>
+						{!this.state.loggedIn ? null :
+							<div>
+								<Link to="/create">
+									<h2>Create</h2>
+								</Link>
+							</div>
+						}
 						{this.state.loggedIn ?
 							<Button onClick={this.attach(this.onLogout)} disabled={this.state.disabled}>
 								<h2>Logout</h2>

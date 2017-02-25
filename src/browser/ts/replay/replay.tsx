@@ -4,7 +4,7 @@ import Page from '../page';
 
 export default class Replay extends Component<{
 	params: {
-		replay?: string;
+		id?: string;
 	};
 }, {}> {
 	

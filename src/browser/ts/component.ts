@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Component as ReactComponent, CSSProperties } from 'react';
 import * as shallowequal from 'shallowequal';
+import * as firebase from 'firebase';
 
 export { React, CSSProperties };
 
@@ -12,6 +13,14 @@ abstract class Component<P, S> extends ReactComponent<P, S> {
 		super();
 		
 		this.state = {} as S;
+	}
+	
+	componentPropsChanged(nextProps: P) { }
+	
+	componentWillReceiveProps(nextProps: P) {
+		if (!shallowequal(this.props, nextProps)) {
+			this.componentPropsChanged(nextProps);
+		}
 	}
 	
 	className(...classes: string[]) {
@@ -63,6 +72,42 @@ abstract class Component<P, S> extends ReactComponent<P, S> {
 	
 	attachUpdate(state?: S) {
 		return () => this.catchUpdate(state);
+	}
+	
+	get uid() {
+		return firebase.auth().currentUser.uid;
+	}
+	
+	ref(path: string) {
+		return firebase.database().ref(path);
+	}
+	
+	set(ref: firebase.database.Reference, data) {
+		return ref.set(data).catch(error => 
+			Promise.reject(
+				JSON.stringify(
+					Object.assign({}, error, {
+						data: data,
+						type: 'set',
+						path: ref.toString()
+					})
+				)
+			)
+		) as Promise<void>;
+	}
+	
+	push(ref: firebase.database.Reference, data) {
+		return ref.push(data).catch(error => 
+			Promise.reject(
+				JSON.stringify(
+					Object.assign({}, error, {
+						data: data,
+						type: 'push',
+						path: ref.toString()
+					})
+				)
+			)
+		) as Promise<firebase.database.Reference>;
 	}
 }
 

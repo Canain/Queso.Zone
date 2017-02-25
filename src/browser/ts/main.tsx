@@ -16,6 +16,10 @@ firebase.initializeApp({
 	messagingSenderId: '902069248859'
 });
 
+if (process.env.NODE_ENV !== 'production') {
+	window['firebase'] = firebase;
+}
+
 const observer = firebase.auth().onAuthStateChanged(() => {
 	observer();
 	const div = window.document.createElement('div');
