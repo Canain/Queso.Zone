@@ -7,6 +7,7 @@ import Page from '../page';
 import Container from '../container';
 import Editor from '../editor';
 import Button from '../button';
+import RelativeTime from '../relativetime';
 
 export interface Code {
 	code: string;
@@ -36,6 +37,7 @@ export default class Replay extends Component<{
 	output?: string;
 	playing?: boolean;
 	started?: number;
+	time?: number;
 }> {
 	
 	code: ReactCodeMirror.ReactCodeMirror;
@@ -112,7 +114,8 @@ export default class Replay extends Component<{
 			}
 			await Promise.all([this.update({
 				code: lastCode ? lastCode.code.code : this.state.initial.code,
-				playing: i !== this.state.replay.length || j !== this.state.select.length
+				playing: i !== this.state.replay.length || j !== this.state.select.length,
+				time: now
 			}).then(() => {
 				this.code.getCodeMirror().getDoc().setHistory(lastCode ? lastCode.code.history : this.state.initial.history);
 				if (lastSelect) {
@@ -153,6 +156,9 @@ export default class Replay extends Component<{
 								<PlayIcon size={styles.editorIconSize}/>
 							</Button>
 						}
+						<div className="clock">
+							<span>{this.formatTime(this.state.time || 0)}</span>
+						</div>
 					</div>
 				</Container>
 			</Page>
