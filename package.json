@@ -1,7 +1,7 @@
 {
   "name": "queso",
   "version": "1.0.0",
-  "description": "A code tutorial replay tool with complication and audio",
+  "description": "A code tutorial replay tool with compilation and audio",
   "main": "index.js",
   "repository": {
     "type": "git",

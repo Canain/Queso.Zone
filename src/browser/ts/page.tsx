@@ -1,13 +1,12 @@
 import Component, { React } from './component';
 import { browserHistory } from 'react-router';
 
+import Toolbar from './toolbar';
+
 export default class Page extends Component<{
 	title?: string;
 	redirect?: string;
 	className?: string;
-	disabled?: boolean;
-	board?: string;
-	content?: JSX.Element;
 }, {}> {
 	
 	componentWillMount() {
@@ -26,6 +25,7 @@ export default class Page extends Component<{
 		this.updateDocument();
 		return (
 			<div>
+				<Toolbar/>
 				{this.props.children}
 			</div>
 		);

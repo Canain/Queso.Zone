@@ -2,11 +2,15 @@ import Component, { React } from '../component';
 
 import Page from '../page';
 
-export default class Replay extends Component<{}, {}> {
+export default class Replay extends Component<{
+	params: {
+		replay?: string;
+	};
+}, {}> {
 	
 	render() {
 		return (
-			<Page className="replay" title="Replay">
+			<Page redirect={this.props.params ? null : '/'} className="replay" title="Replay">
 				<h1>Replay</h1>
 			</Page>
 		);
