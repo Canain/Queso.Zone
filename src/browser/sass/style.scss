@@ -177,6 +177,9 @@ textarea {
 
 .output {
 	height: 100px;
+}
+
+textarea:disabled {
 	color: $darkish;
 }
 
