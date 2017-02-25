@@ -39,7 +39,7 @@ export default class Create extends Component<CreateProps, {}> {
 		return (
 			<Page className="create" title="Create">
 				<Container>
-					<h1>Create {this.props.params.id}</h1>
+					<input placeholder="Name"/>
 				</Container>
 			</Page>
 		);

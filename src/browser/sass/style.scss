@@ -1,11 +1,12 @@
 $primary: #2196F3;
 $light: white;
+$grey: #ccc;
 
 $surround: 16px;
 
 body {
 	margin: 0;
-	font: Arial, Helvetica Neue, Helvetica, sans-serif;
+	font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
 }
 
 .container {
@@ -34,6 +35,8 @@ body {
 .toolbar {
 	background-color: $primary;
 	color: $light;
+	
+	box-shadow: 0 2px 5px rgba(0,0,0,.26);
 	
 	$height: 64px;
 	
@@ -76,5 +79,21 @@ body {
 .notfound {
 	.container {
 		text-align: center;
+	}
+}
+
+.create {
+	input {
+		height: 40px;
+		width: 100%;
+		font-size: 20px;
+		
+		border: none;
+		border-bottom: solid $grey 1px;
+		
+		&:focus {
+			outline: none;
+			border-bottom: solid $primary 2px;
+		}
 	}
 }
