@@ -22,12 +22,13 @@ export default class Create extends Component<CreateProps, {
 	code?: string;
 	recording?: boolean;
 	done?: boolean;
-	start?: number;
 }> {
 	
 	code: ReactCodeMirror.ReactCodeMirror;
 	
 	replay: Reference;
+	
+	start: number;
 	
 	componentPropsChanged(nextProps: CreateProps) {
 		if (!nextProps.params.id) {
@@ -78,7 +79,11 @@ export default class Create extends Component<CreateProps, {
 			history: JSON.stringify(this.code.getCodeMirror().getDoc().getHistory())
 		};
 		if (this.state.recording) {
-			return await this.set(this.getReplayCode(this.replay, this.now - this.state.start), send);
+			const now = this.now;
+			if (!this.start) {
+				this.start = now;
+			}
+			return await this.set(this.getReplayCode(this.replay, now - this.start), send);
 		}
 		await this.set(this.getReplayInitial(this.replay), send);
 	}
@@ -89,7 +94,11 @@ export default class Create extends Component<CreateProps, {
 		if (!this.state.recording) {
 			return;
 		}
-		await this.set(this.getReplaySelect(this.replay, this.now - this.state.start), JSON.stringify(editor.getDoc().listSelections()));
+		const now = this.now;
+		if (!this.start) {
+			this.start = now;
+		}
+		await this.set(this.getReplaySelect(this.replay, now - this.start), JSON.stringify(editor.getDoc().listSelections()));
 	}
 	
 	async init() {
@@ -102,9 +111,9 @@ export default class Create extends Component<CreateProps, {
 			code: this.state.code || '',
 			history: JSON.stringify(this.code.getCodeMirror().getDoc().getHistory())
 		})
+		this.start = null;
 		await Promise.all([this.update({
-			recording: true,
-			start: this.now
+			recording: true
 		}), this.set(this.getReplayRecording(this.replay), true)]);
 		this.code.focus();
 	}

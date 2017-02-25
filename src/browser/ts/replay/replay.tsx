@@ -36,7 +36,6 @@ export default class Replay extends Component<{
 	output?: string;
 	playing?: boolean;
 	started?: number;
-	offset?: number;
 }> {
 	
 	code: ReactCodeMirror.ReactCodeMirror;
@@ -79,8 +78,7 @@ export default class Replay extends Component<{
 			code: initial ? initial.code : '',
 			name,
 			replay,
-			select,
-			offset: Math.min(replay.length ? replay[0].time : 0, select.length ? select[0].time : 0)
+			select
 		});
 		if (initial) {
 			this.code.getCodeMirror().getDoc().setHistory(this.state.initial.history);
@@ -98,7 +96,7 @@ export default class Replay extends Component<{
 			let i;
 			for (i = 0; i < this.state.replay.length; i++) {
 				const replay = this.state.replay[i];
-				if ((replay.time - this.state.offset) > now) {
+				if (replay.time > now) {
 					break;
 				}
 				lastCode = replay;
@@ -107,7 +105,7 @@ export default class Replay extends Component<{
 			let lastSelect = null as SelectReplay;
 			for (j = 0; j < this.state.select.length; j++) {
 				const select = this.state.select[j];
-				if ((select.time - this.state.offset) > now) {
+				if (select.time > now) {
 					break;
 				}
 				lastSelect = select;
