@@ -1,8 +1,9 @@
 import Component, { React, Reference, DataSnapshot } from '../component';
-import { browserHistory } from 'react-router';
+import { Link, browserHistory } from 'react-router';
 import RecordIcon from 'react-icons/md/fiber-manual-record';
 import RunIcon from 'react-icons/md/play-arrow';
 import StopIcon from 'react-icons/md/stop';
+import ViewIcon from 'react-icons/md/pageview';
 
 import * as styles from '../styles';
 import Page from '../page';
@@ -118,7 +119,13 @@ export default class Create extends Component<CreateProps, {
 								<Button onClick={this.attach(this.onStop)}>
 									<StopIcon size={styles.editorIconSize} color={styles.editorRecordColor}/>
 								</Button> :
-								<Button disabled={this.state.done} onClick={this.attach(this.onRecord)}>
+								this.state.done ? 
+								<div>
+									<Link to={`/r/${this.props.params.id}`}>
+										<ViewIcon size={styles.editorIconSize}/>
+									</Link>
+								</div> :
+								<Button onClick={this.attach(this.onRecord)}>
 									<RecordIcon size={styles.editorIconSize} color={styles.editorRecordColor}/>
 								</Button>
 							}
