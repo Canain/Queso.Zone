@@ -6,6 +6,8 @@ import * as firebase from 'firebase';
 export type DataSnapshot = firebase.database.DataSnapshot;
 export type Reference = firebase.database.Reference;
 
+export type ReplayId = string | Reference;
+
 export { React, CSSProperties };
 
 interface Component<P, S> {
@@ -20,6 +22,42 @@ abstract class Component<P, S> extends ReactComponent<P, S> {
 		super();
 		
 		this.state = {} as S;
+	}
+	
+	get replays() {
+		return this.ref('replays');
+	}
+	
+	getReplay(id: ReplayId) {
+		return typeof id === 'string' ? this.replays.child(id) : id;
+	}
+	
+	getReplayName(id: ReplayId) {
+		return this.getReplay(id).child('name');
+	}
+	
+	getReplayInitial(id: ReplayId) {
+		return this.getReplay(id).child('initial');
+	}
+	
+	getReplayCode(id: ReplayId, offset: number) {
+		return this.getReplay(id).child('code').child(offset.toString().replace(/\./g, '-'));
+	}
+	
+	getReplayRecording(id: ReplayId) {
+		return this.getReplay(id).child('recording');
+	}
+	
+	get createUrl() {
+		return '/create';
+	}
+	
+	getCreateUrl(id: string) {
+		return `${this.createUrl}/${id}`;
+	}
+	
+	getReplayUrl(id: string) {
+		return `/r/${id}`;
 	}
 	
 	componentWillReceiveProps(nextProps: P) {

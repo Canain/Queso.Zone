@@ -183,9 +183,12 @@ textarea:disabled {
 	color: $darkish;
 }
 
+$inputHeight: 48px;
+$inputSize: 24px;
+
 .create {
 	input {
-		height: 48px;
+		height: $inputSize;
 		width: 100%;
 		font-size: 24px;
 		
@@ -202,5 +205,12 @@ textarea:disabled {
 		}
 		
 		background-color: transparent;
+	}
+}
+
+.replay {
+	h3 {
+		line-height: $inputHeight;
+		font-size: 24px;
 	}
 }

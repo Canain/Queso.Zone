@@ -55,7 +55,7 @@ export default class Toolbar extends Component<{}, {
 					<div>
 						{!this.state.loggedIn ? null :
 							<div>
-								<Link to="/create">
+								<Link to={this.createUrl}>
 									<h2>Create</h2>
 								</Link>
 							</div>

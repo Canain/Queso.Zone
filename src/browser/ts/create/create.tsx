@@ -31,7 +31,7 @@ export default class Create extends Component<CreateProps, {
 		if (!nextProps.params.id) {
 			return this.init().catch(this.catch);
 		}
-		this.replay = this.ref('replays').child(nextProps.params.id);
+		this.replay = this.getReplay(nextProps.params.id);
 		this.updateInitial().then(() => this.update()).catch(this.catch);
 	}
 	
@@ -42,7 +42,7 @@ export default class Create extends Component<CreateProps, {
 		if (!this.props.params.id) {
 			return this.init().catch(this.catch);
 		}
-		this.replay = this.ref('replays').child(this.props.params.id);
+		this.replay = this.getReplay(this.props.params.id);
 		this.updateInitial().catch(this.catch);
 	}
 	
@@ -61,7 +61,7 @@ export default class Create extends Component<CreateProps, {
 		await this.update({
 			name
 		});
-		await this.set(this.replay.child('name'), name);
+		await this.set(this.getReplayName(this.replay), name);
 	}
 	
 	async onCode(e: React.ChangeEvent<HTMLTextAreaElement>) {
@@ -69,14 +69,14 @@ export default class Create extends Component<CreateProps, {
 		await this.update({
 			code
 		});
-		await this.set(this.state.recording ? this.replay.child('code').child((this.now - this.state.start).toString().replace(/\./g, '-')) : this.replay.child('initial'), code);
+		await this.set(this.state.recording ? this.getReplayCode(this.replay, this.now - this.state.start) : this.getReplayInitial(this.replay), code);
 	}
 	
 	async init() {
-		const ref = await this.push(this.ref('replays'), {
+		const ref = await this.push(this.replays, {
 			uid: this.uid
 		});
-		browserHistory.push(`/create/${ref.key}`);
+		browserHistory.push(this.getCreateUrl(ref.key));
 	}
 	
 	onCodeDown(e: React.KeyboardEvent<HTMLTextAreaElement>) {
@@ -93,7 +93,7 @@ export default class Create extends Component<CreateProps, {
 		await Promise.all([this.update({
 			recording: true,
 			start: this.now
-		}), this.set(this.replay.child('recording'), true)]);
+		}), this.set(this.getReplayRecording(this.replay), true)]);
 	}
 	
 	async onStop() {
@@ -116,7 +116,7 @@ export default class Create extends Component<CreateProps, {
 						</Button> :
 						this.state.done ? 
 						<div>
-							<Link to={`/r/${this.props.params.id}`}>
+							<Link to={this.getReplayUrl(this.props.params.id)}>
 								<ViewIcon size={styles.editorIconSize}/>
 							</Link>
 						</div> :
