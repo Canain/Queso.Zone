@@ -1,5 +1,5 @@
 import Component, { React } from './component';
-import RunIcon from 'react-icons/md/play-arrow';
+import RunIcon from 'react-icons/md/build';
 
 import * as styles from './styles';
 import Container from './container';
@@ -9,8 +9,8 @@ export default class Editor extends Component<{
 	disabled?: boolean;
 	code: string;
 	output: string;
-	onCode: React.EventHandler<React.ChangeEvent<HTMLTextAreaElement>>;
-	onCodeDown: React.EventHandler<React.KeyboardEvent<HTMLTextAreaElement>>;
+	onCode?: React.EventHandler<React.ChangeEvent<HTMLTextAreaElement>>;
+	onCodeDown?: React.EventHandler<React.KeyboardEvent<HTMLTextAreaElement>>;
 }, {}> {
 	render() {
 		return (
