@@ -145,8 +145,7 @@ export default class Replay extends Component<{
 				<Container>
 					<h3>{this.state.name || 'Untitled'}</h3>
 				</Container>
-				<Editor code={this.state.code} output={this.state.output} onCodeRef={ref => this.code = ref}/>
-				<Container className="bottom">
+				<Container>
 					<div className="editor box">
 						{this.state.playing ? 
 							<Button onClick={this.attach(this.onStop)}>
@@ -160,6 +159,9 @@ export default class Replay extends Component<{
 							<span>{this.formatTime(this.state.time || 0)}</span>
 						</div>
 					</div>
+				</Container>
+				<Container>
+					<Editor code={this.state.code} output={this.state.output} onCodeRef={ref => this.code = ref}/>
 				</Container>
 			</Page>
 		);

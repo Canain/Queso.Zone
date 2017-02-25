@@ -135,14 +135,7 @@ export default class Create extends Component<CreateProps, {
 				<Container>
 					<input placeholder="Tutorial Name" value={this.state.name || ''} onChange={this.attach(this.onName)} disabled={!!this.state.done}/>
 				</Container>
-				<Editor disabled={!!this.state.done} code={this.state.code || ''} onCode={this.attach(this.onCode)} output={this.state.output} onCodeRef={ref => {
-						this.code = ref;
-						if (this.code) {
-							this.code.getCodeMirror().off('cursorActivity', this.onCursorAttached);
-							this.code.getCodeMirror().on('cursorActivity', this.onCursorAttached);
-						}
-					}}/>
-				<Container className="bottom">
+				<Container>
 					<div className="editor box">
 						{this.state.recording ? 
 							<Button onClick={this.attach(this.onStop)}>
@@ -167,6 +160,15 @@ export default class Create extends Component<CreateProps, {
 							}
 						</div>
 					</div>
+				</Container>
+				<Container>
+					<Editor disabled={!!this.state.done} code={this.state.code || ''} onCode={this.attach(this.onCode)} output={this.state.output} onCodeRef={ref => {
+						this.code = ref;
+						if (this.code) {
+							this.code.getCodeMirror().off('cursorActivity', this.onCursorAttached);
+							this.code.getCodeMirror().on('cursorActivity', this.onCursorAttached);
+						}
+					}}/>
 				</Container>
 			</Page>
 		);

@@ -16,29 +16,25 @@ export default class Editor extends Component<{
 }, {}> {
 	render() {
 		return (
-			<div>
-				<Container>
-					<div className="box">
-						<div className="editor">
-							<Button>
-								<RunIcon size={styles.editorIconSize}/>
-							</Button>
-							{this.props.children}
-						</div>
-						<hr/>
-						<CodeMirror className="code" value={this.props.code} onChange={this.props.onCode} ref={this.props.onCodeRef} options={{
-							mode: 'python',
-							lineWrapping: true,
-							readOnly: this.props.disabled,
-							lineNumbers: true
-						}}/>
-						<hr/>
-						<CodeMirror className="output" value={`Output:\n${this.props.output || ''}`} options={{
-							readOnly: true,
-							lineNumbers: true
-						}}/>
-					</div>
-				</Container>
+			<div className="box">
+				<div className="editor">
+					<Button>
+						<RunIcon size={styles.editorIconSize}/>
+					</Button>
+					{this.props.children}
+				</div>
+				<hr/>
+				<CodeMirror className="code" value={this.props.code} onChange={this.props.onCode} ref={this.props.onCodeRef} options={{
+					mode: 'python',
+					lineWrapping: true,
+					readOnly: this.props.disabled,
+					lineNumbers: true
+				}}/>
+				<hr/>
+				<CodeMirror className="output" value={`Output:\n${this.props.output || ''}`} options={{
+					readOnly: true,
+					lineNumbers: true
+				}}/>
 			</div>
 		);
 	}
