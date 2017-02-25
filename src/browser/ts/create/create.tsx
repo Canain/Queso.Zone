@@ -87,13 +87,6 @@ export default class Create extends Component<CreateProps, {
 			}
 			const offset = now - this.state.start;
 			await this.set(this.getReplayCode(this.replay, offset), send);
-			// const doc = this.code.getCodeMirror().getDoc();
-			// const anchor = doc.getCursor('anchor');
-			// const head = doc.getCursor('head');
-			// await this.set(this.getReplaySelect(this.replay, offset), JSON.stringify({
-			// 	anchor,
-			// 	head
-			// }));
 			return;
 		}
 		await this.set(this.getReplayInitial(this.replay), send);
@@ -105,19 +98,26 @@ export default class Create extends Component<CreateProps, {
 		if (!this.state.recording) {
 			return;
 		}
+		const doc = editor.getDoc();
+		const anchor = doc.getCursor('anchor');
+		const head = doc.getCursor('head');
+		const send = {
+			anchor: {
+				line: anchor.line,
+				ch: anchor.ch
+			},
+			head: {
+				line: head.line,
+				ch: head.ch
+			}
+		};
 		const now = this.now;
 		if (!this.state.start) {
 			await this.update({
 				start: now
 			});
 		}
-		const doc = editor.getDoc();
-		const anchor = doc.getCursor('anchor');
-		const head = doc.getCursor('head');
-		await this.set(this.getReplaySelect(this.replay, now - this.state.start), JSON.stringify({
-			anchor,
-			head
-		}));
+		await this.set(this.getReplaySelect(this.replay, now - this.state.start), JSON.stringify(send));
 	}
 	
 	async init() {
