@@ -10,7 +10,9 @@ export interface CreateProps {
 	};
 }
 
-export default class Create extends Component<CreateProps, {}> {
+export default class Create extends Component<CreateProps, {
+	output?: string;
+}> {
 	
 	componentPropsChanged(nextProps: CreateProps) {
 		if (!nextProps.params.id) {
@@ -39,15 +41,13 @@ export default class Create extends Component<CreateProps, {}> {
 		return (
 			<Page className="create" title="Create">
 				<Container>
-					<input placeholder="Name"/>
+					<input placeholder="Tutorial Name"/>
 				</Container>
 				<Container>
 					<textarea className="code"/>
 				</Container>
 				<Container>
-					<textarea className="output" disabled={true}>
-						Output:
-					</textarea>
+					<textarea className="output" disabled={true} value={`Output:\n${this.state.output || ''}`}/>
 				</Container>
 			</Page>
 		);
