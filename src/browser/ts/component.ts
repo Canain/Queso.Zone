@@ -78,6 +78,10 @@ abstract class Component<P, S> extends ReactComponent<P, S> {
 		return () => this.catchUpdate(state);
 	}
 	
+	get now() {
+		return window.performance.now();
+	}
+	
 	get uid() {
 		const currentUser = firebase.auth().currentUser;
 		return currentUser ? currentUser.uid : null;

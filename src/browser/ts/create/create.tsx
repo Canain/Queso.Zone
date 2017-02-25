@@ -17,11 +17,10 @@ export interface CreateProps {
 export default class Create extends Component<CreateProps, {
 	output?: string;
 	name?: string;
+	code?: string;
 }> {
 	
 	replay: Reference;
-	
-	editor: HTMLTextAreaElement;
 	
 	componentPropsChanged(nextProps: CreateProps) {
 		if (!nextProps.params.id) {
@@ -46,7 +45,8 @@ export default class Create extends Component<CreateProps, {
 		const data = await this.replay.once('value') as DataSnapshot;
 		const val = data.val();
 		await this.update({
-			name: val.name
+			name: val.name,
+			code: val.initial
 		});
 	}
 	
@@ -56,6 +56,14 @@ export default class Create extends Component<CreateProps, {
 			name
 		});
 		await this.set(this.replay.child('name'), name);
+	}
+	
+	async onCode(e: React.ChangeEvent<HTMLTextAreaElement>) {
+		const code = e.target.value;
+		await this.update({
+			code
+		});
+		await this.set(this.replay.child('initial'), code);
 	}
 	
 	async init() {
@@ -82,7 +90,7 @@ export default class Create extends Component<CreateProps, {
 							</Button>
 						</div>
 						<hr/>
-						<textarea className="code" ref={ref => this.editor = ref}/>
+						<textarea className="code" value={this.state.code || ''} onChange={this.attach(this.onCode)}/>
 					</div>
 				</Container>
 				<Container>
