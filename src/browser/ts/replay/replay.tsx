@@ -57,7 +57,8 @@ export default class Replay extends Component<{
 		do {
 			let last = null as CodeReplay;
 			const now = this.now - this.state.started;
-			for (let i = 0; i < this.state.replay.length; i++) {
+			let i;
+			for (i = 0; i < this.state.replay.length; i++) {
 				const replay = this.state.replay[i];
 				if (replay.time > now) {
 					break;
@@ -65,7 +66,8 @@ export default class Replay extends Component<{
 				last = replay;
 			}
 			await Promise.all([this.update({
-				code: last ? last.code : this.state.initial
+				code: last ? last.code : this.state.initial,
+				playing: i !== this.state.replay.length
 			}), this.animationFrame()]);
 		} while (this.state.playing);
 	}
