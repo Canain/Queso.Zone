@@ -41,11 +41,19 @@ abstract class Component<P, S> extends ReactComponent<P, S> {
 	}
 	
 	getReplayCode(id: ReplayId, offset: number) {
-		return this.getReplay(id).child('code').child(offset.toString().replace(/\./g, '-'));
+		return this.getReplay(id).child('code').child(this.normalizeNumber(offset));
 	}
 	
 	getReplaySelect(id: ReplayId, offset: number) {
-		return this.getReplay(id).child('select').child(offset.toString().replace(/\./g, '-'));
+		return this.getReplay(id).child('select').child(this.normalizeNumber(offset));
+	}
+	
+	normalizeNumber(num: number) {
+		return num.toString().replace(/\./g, '-');
+	}
+	
+	normalizedToNumber(normalized: string) {
+		return parseFloat(normalized.replace(/\-/g, '.'));
 	}
 	
 	getReplayRecording(id: ReplayId) {
@@ -159,6 +167,20 @@ abstract class Component<P, S> extends ReactComponent<P, S> {
 				)
 			)
 		) as Promise<firebase.database.Reference>;
+	}
+	
+	put(ref: firebase.database.Reference, data) {
+		return ref.update(data).catch(error => 
+			Promise.reject(
+				JSON.stringify(
+					Object.assign({}, error, {
+						data: data,
+						type: 'update',
+						path: ref.toString()
+					})
+				)
+			)
+		) as Promise<void>;
 	}
 }
 

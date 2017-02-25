@@ -25,7 +25,7 @@ export default class Create extends Component<CreateProps, {
 	start?: number;
 }> {
 	
-	code: HTMLTextAreaElement;
+	code: ReactCodeMirror.ReactCodeMirror;
 	
 	replay: Reference;
 	
@@ -54,8 +54,9 @@ export default class Create extends Component<CreateProps, {
 		await this.update({
 			done: val.recording,
 			name: val.name,
-			code: val.initial
+			code: val.initial ? val.initial.code : ''
 		});
+		this.code.getCodeMirror().getDoc().setHistory(JSON.parse(val.initial.history));
 	}
 	
 	async onName(e: React.ChangeEvent<HTMLInputElement>) {
@@ -66,25 +67,27 @@ export default class Create extends Component<CreateProps, {
 		await this.set(this.getReplayName(this.replay), name);
 	}
 	
-	async onCode(e: React.ChangeEvent<HTMLTextAreaElement>) {
-		const code = e.target.value;
+	async onCode(code: string) {
 		await this.update({
 			code
 		});
-		await this.set(this.state.recording ? this.getReplayCode(this.replay, this.now - this.state.start) : this.getReplayInitial(this.replay), code);
+		const send = {
+			code,
+			history: JSON.stringify(this.code.getCodeMirror().getDoc().getHistory())
+		};
+		if (this.state.recording) {
+			return await this.set(this.getReplayCode(this.replay, this.now - this.state.start), send);
+		}
+		await this.set(this.getReplayInitial(this.replay), send);
 	}
 	
-	async onCodeSelect(e: React.SyntheticEvent<HTMLTextAreaElement>) {
-		const target = e.target as HTMLTextAreaElement;
+	onCursorAttached = this.attach(this.onCursor);
+	
+	async onCursor(editor: CodeMirror.Editor) {
 		if (!this.state.recording) {
 			return;
 		}
-		
-		const { selectionStart, selectionEnd } = target;
-		await this.set(this.getReplaySelect(this.replay, this.now - this.state.start), {
-			selectionStart,
-			selectionEnd
-		});
+		await this.set(this.getReplaySelect(this.replay, this.now - this.state.start), JSON.stringify(editor.getDoc().listSelections()));
 	}
 	
 	async init() {
@@ -92,16 +95,6 @@ export default class Create extends Component<CreateProps, {
 			uid: this.uid
 		});
 		browserHistory.push(this.getCreateUrl(ref.key));
-	}
-	
-	onCodeDown(e: React.KeyboardEvent<HTMLTextAreaElement>) {
-		if (e.keyCode === 9 || e.which === 9) {
-			e.preventDefault();
-			const target = e.target as HTMLTextAreaElement;
-			const start = target.selectionStart;
-			target.value = target.value.substring(0, start) + '\t' + target.value.substring(target.selectionEnd);
-			target.selectionEnd = start + 1;
-		}
 	}
 	
 	async onRecord() {
@@ -125,7 +118,13 @@ export default class Create extends Component<CreateProps, {
 				<Container>
 					<input placeholder="Tutorial Name" value={this.state.name || ''} onChange={this.attach(this.onName)} disabled={this.state.done}/>
 				</Container>
-				<Editor disabled={this.state.done} code={this.state.code || ''} onCode={this.attach(this.onCode)} onCodeDown={this.attach(this.onCodeDown)} onCodeSelect={this.attach(this.onCodeSelect)} output={this.state.output} onCodeRef={ref => this.code = ref}>
+				<Editor disabled={this.state.done} code={this.state.code || ''} onCode={this.attach(this.onCode)} output={this.state.output} onCodeRef={ref => {
+						this.code = ref;
+						if (this.code) {
+							this.code.getCodeMirror().off('cursorActivity', this.onCursorAttached);
+							this.code.getCodeMirror().on('cursorActivity', this.onCursorAttached);
+						}
+					}}>
 					{this.state.recording ? 
 						<Button onClick={this.attach(this.onStop)}>
 							<StopIcon size={styles.editorIconSize} color={styles.editorRecordColor}/>

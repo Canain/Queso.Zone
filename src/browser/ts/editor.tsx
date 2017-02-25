@@ -1,5 +1,7 @@
 import Component, { React } from './component';
 import RunIcon from 'react-icons/md/build';
+import * as CodeMirror from 'react-codemirror';
+import 'codemirror/mode/python/python';
 
 import * as styles from './styles';
 import Container from './container';
@@ -9,10 +11,8 @@ export default class Editor extends Component<{
 	disabled?: boolean;
 	code: string;
 	output: string;
-	onCode?: React.EventHandler<React.ChangeEvent<HTMLTextAreaElement>>;
-	onCodeDown?: React.EventHandler<React.KeyboardEvent<HTMLTextAreaElement>>;
-	onCodeSelect?: React.EventHandler<React.SyntheticEvent<HTMLTextAreaElement>>;
-	onCodeRef?: (ref: HTMLTextAreaElement) => void;
+	onCode?: (newValue: string) => void;
+	onCodeRef?: (ref: ReactCodeMirror.ReactCodeMirror) => void;
 }, {}> {
 	render() {
 		return (
@@ -26,11 +26,19 @@ export default class Editor extends Component<{
 							{this.props.children}
 						</div>
 						<hr/>
-						<textarea className="code" disabled={this.props.disabled} value={this.props.code} onChange={this.props.onCode} onKeyDown={this.props.onCodeDown} onSelect={this.props.onCodeSelect} ref={this.props.onCodeRef}/>
+						<CodeMirror className="code" value={this.props.code} onChange={this.props.onCode} ref={this.props.onCodeRef} options={{
+							mode: 'python',
+							lineWrapping: true,
+							readOnly: this.props.disabled,
+							lineNumbers: true
+						}}/>
 					</div>
 				</Container>
 				<Container>
-					<textarea className="output box" disabled={true} value={`Output:\n${this.props.output || ''}`}/>
+					<CodeMirror className="output box" value={`Output:\n${this.props.output || ''}`} options={{
+						readOnly: true,
+						lineNumbers: true
+					}}/>
 				</Container>
 			</div>
 		);

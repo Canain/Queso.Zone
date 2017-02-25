@@ -8,15 +8,19 @@ import Container from '../container';
 import Editor from '../editor';
 import Button from '../button';
 
+export interface Code {
+	code: string;
+	history;
+}
+
 export interface CodeReplay {
 	time: number;
-	code: string;
+	code: Code;
 }
 
 export interface SelectReplay {
 	time: number;
-	selectionStart: number;
-	selectionEnd: number;
+	selections: { anchor: CodeMirror.Position; head: CodeMirror.Position }[];
 }
 
 export default class Replay extends Component<{
@@ -25,7 +29,7 @@ export default class Replay extends Component<{
 	};
 }, {
 	code?: string;
-	initial?: string;
+	initial?: Code;
 	name?: string;
 	replay?: CodeReplay[];
 	select?: SelectReplay[];
@@ -35,7 +39,7 @@ export default class Replay extends Component<{
 	offset?: number;
 }> {
 	
-	code: HTMLTextAreaElement;
+	code: ReactCodeMirror.ReactCodeMirror;
 	
 	componentWillMount() {
 		if (!this.props.params.id) {
@@ -49,29 +53,36 @@ export default class Replay extends Component<{
 		const { initial, code, select: selects, name } = data.val();
 		const replay = [] as CodeReplay[];
 		for (const i in code) {
+			const c = code[i];
 			replay.push({
-				time: parseFloat(i.replace(/\-/g, '.')),
-				code: code[i]
+				time: this.normalizedToNumber(i),
+				code: {
+					code: c.code,
+					history: JSON.parse(c.history)
+				}
 			});
 		}
 		replay.sort((a, b) => a.time - b.time);
 		const select = [] as SelectReplay[];
 		for (const i in selects) {
-			const { selectionStart, selectionEnd } = selects[i];
+			const selections = JSON.parse(selects[i]);
 			select.push({
-				time: parseFloat(i.replace(/\-/g, '.')),
-				selectionStart,
-				selectionEnd
+				time: this.normalizedToNumber(i),
+				selections
 			});
 		}
+		initial.history = JSON.parse(initial.history);
 		await this.update({
 			initial,
-			code: initial,
+			code: initial ? initial.code : '',
 			name,
 			replay,
 			select,
 			offset: Math.min(replay.length ? replay[0].time : 0, select.length ? select[0].time : 0)
 		});
+		if (initial) {
+			this.code.getCodeMirror().getDoc().setHistory(this.state.initial.history);
+		}
 	}
 	
 	async animate() {
@@ -100,9 +111,9 @@ export default class Replay extends Component<{
 				lastSelect = select;
 			}
 			await Promise.all([this.update({
-				code: lastCode ? lastCode.code : this.state.initial,
+				code: lastCode ? lastCode.code.code : this.state.initial.code,
 				playing: i !== this.state.replay.length || j !== this.state.select.length
-			}).then(() => lastSelect ? this.code.setSelectionRange(lastSelect.selectionStart, lastSelect.selectionEnd) : null), this.animationFrame()]);
+			}).then(() => lastSelect ? this.code.getCodeMirror().getDoc()['setSelections'](lastSelect.selections) : null), this.animationFrame()]);
 		} while (this.state.playing);
 	}
 	
