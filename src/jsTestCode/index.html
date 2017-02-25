@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+
+<script
+  src="https://code.jquery.com/jquery-3.1.1.min.js"
+  integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+  crossorigin="anonymous"></script>
+
+  <script src="diff.js"></script>
+
+<body>
+
+
+
+<audio controls id="drake">
+	<source src="headlines.mp3" type="audio/mpeg">
+</audio>
+
+<audio controls id="drake2">
+	<source src="headlines.mp3" type="audio/mpeg">
+</audio>
+
+<textarea id="codein" name="codein" cols="40" rows="5"></textarea>
+<textarea id="codeout" name="codeout" cols="40" rows="5"></textarea>
+
+<div id="textfield"></div>
+
+<script type="text/javascript">
+	var drake = document.getElementById("drake");
+	var drake2 = document.getElementById("drake2");
+	console.log(drake);
+
+	function step(timestamp) {
+	  // console.log(drake.currentTime);
+	  window.requestAnimationFrame(step);
+	}
+
+	window.requestAnimationFrame(step);
+
+	var keyTime = [];
+
+	var text = "";
+	var counter = 0;
+
+	// var audioControl = document.getElementById('drake');
+
+	// function step(timestamp) {
+	//   console.log(audioControl.currentTime);
+	//   window.requestAnimationFrame(step);
+	// }
+
+	// window.requestAnimationFrame(step);
+
+
+	$("#codein").bind('input', function() { 
+	    var value = $(this).val() // get the current value of the input field.
+	    console.log(value);
+	});
+
+	function getDifference(a, b)
+	{
+	    var i = 0;
+	    var j = 0;
+	    var result = "";
+
+	    while (j < b.length)
+	    {
+	        if (a[i] != b[j] || i == a.length)
+	            result += b[j];
+	        else
+	            i++;
+	        j++;
+	    }
+	    return result;
+	}
+
+	document.onkeydown = function (e) {
+	    e = e || window.event;
+	    // use e.keyCode
+	    
+	    var key = showChar(e);
+	    if (key == 9) {
+	    	e.preventDefault();
+	    	var codeindata = document.getElementById('codein').value;
+	    	document.getElementById('codein').value = codeindata + '\t';
+	    }
+
+	    var timestamp = {};
+	    timestamp.key = key;
+	    timestamp.time = drake.currentTime;
+	    keyTime.push(timestamp);
+	   	console.log(String.fromCharCode(key)+ " " + drake.currentTime);
+	};
+
+	function showChar(e){
+	  if(e.keyCode!=16){ // If the pressed key is anything other than SHIFT
+	        if(e.keyCode >= 65 && e.keyCode <= 90){ // If the key is a letter
+	            if(e.shiftKey){ // If the SHIFT key is down, return the ASCII code for the capital letter
+	                return e.keyCode;
+	            }else{ // If the SHIFT key is not down, convert to the ASCII code for the lowecase letter
+	                return e.keyCode+32;
+	            }
+	        }else{
+	            return e.keyCode;
+	        }
+	  } else {
+	  	return e.keyCode;
+	  }
+	}
+
+	function step(timestamp) {
+	  var currFrame = drake2.currentTime;
+	  var textfield = $("#textfield");
+	  if (currFrame >= keyTime[counter].time) {
+	  	var updatedkeycode = String.fromCharCode(keyTime[counter].key);
+	  	text = text + updatedkeycode;
+	  	// text = text + keyTime[counter].key + " ";
+	  	// if (keyTime[counter].key === 13) {
+	  	// 	text += '\n';
+	  	// }
+	   //  if (keyTime[counter].key === 9) {
+	  	// 	text += '\t';
+	  	// }
+	  	//BUG: backspace only deletes last character
+	  	if (keyTime[counter].key === 8) {
+	  		text = text.substring(0, text.length - 2);
+	  		console.log("backspace" + text);
+	  	}
+	  	counter++;
+	  	console.log("Time: " + currFrame + " " + text);
+	  	document.getElementById('codeout').value = text;
+	  }
+
+	  window.requestAnimationFrame(step);
+	}
+
+	drake2.addEventListener("play", function() {
+		window.requestAnimationFrame(step);
+	})
+
+	drake2.addEventListener("seeked", function() {
+		var now = this.currentTime;
+		var i = 0;
+		for (i; i < keyTime.length; i++) {
+			if (keyTime[i].time > now) {
+				break;
+			}
+		}
+		counter = i > 0 ? i - 1 : 0;
+		text = "";
+		for (var j = 0; j < counter; j++) {
+			text = text + String.fromCharCode(keyTime[j].key);
+		}
+	})
+
+</script>
+
+</body>
+</html>
