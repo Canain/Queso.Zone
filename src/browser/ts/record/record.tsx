@@ -148,7 +148,7 @@ export default class Record extends Component<RecordProps, {
 		return (
 			<Page className="record" title="Record">
 				<Container>
-					<input placeholder="Tutorial Name" value={this.state.name || ''} onChange={this.attach(this.onName)} disabled={!!this.state.done}/>
+					<input placeholder="Recording Name" value={this.state.name || ''} onChange={this.attach(this.onName)} disabled={!!this.state.done}/>
 				</Container>
 				<Container>
 					<div className="editor box">
