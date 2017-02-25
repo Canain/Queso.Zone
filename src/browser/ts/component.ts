@@ -5,6 +5,10 @@ import * as firebase from 'firebase';
 
 export { React, CSSProperties };
 
+interface Component<P, S> {
+	componentPropsChanged(nextProps: P);
+}
+
 abstract class Component<P, S> extends ReactComponent<P, S> {
 	
 	catch = (e: Error) => this.report(e);
@@ -15,9 +19,10 @@ abstract class Component<P, S> extends ReactComponent<P, S> {
 		this.state = {} as S;
 	}
 	
-	componentPropsChanged(nextProps: P) { }
-	
 	componentWillReceiveProps(nextProps: P) {
+		if (!this.componentPropsChanged) {
+			return;
+		}
 		if (!shallowequal(this.props, nextProps)) {
 			this.componentPropsChanged(nextProps);
 		}
@@ -75,7 +80,8 @@ abstract class Component<P, S> extends ReactComponent<P, S> {
 	}
 	
 	get uid() {
-		return firebase.auth().currentUser.uid;
+		const currentUser = firebase.auth().currentUser;
+		return currentUser ? currentUser.uid : null;
 	}
 	
 	ref(path: string) {

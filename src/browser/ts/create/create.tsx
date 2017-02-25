@@ -14,14 +14,17 @@ export default class Create extends Component<CreateProps, {}> {
 	
 	componentPropsChanged(nextProps: CreateProps) {
 		if (!nextProps.params.id) {
-			this.init().catch(this.catch);
+			return this.init().catch(this.catch);
 		}
 		this.catchUpdate();
 	}
 	
 	componentWillMount() {
+		if (!this.uid) {
+			return browserHistory.push('/');
+		}
 		if (!this.props.params.id) {
-			this.init().catch(this.catch);
+			return this.init().catch(this.catch);
 		}
 	}
 	

@@ -1,5 +1,5 @@
 import Component, { React } from './component';
-import { Link } from 'react-router';
+import { Link, browserHistory } from 'react-router';
 import * as firebase from 'firebase';
 
 import Container from './container';
@@ -11,7 +11,7 @@ export default class Toolbar extends Component<{}, {
 }> {
 	
 	get loggedIn() {
-		return !!firebase.auth().currentUser;
+		return !!this.uid;
 	}
 	
 	componentWillMount() {
@@ -40,6 +40,9 @@ export default class Toolbar extends Component<{}, {
 			disabled: false,
 			loggedIn: this.loggedIn
 		});
+		if (!this.state.loggedIn) {
+			browserHistory.push('/');
+		}
 	}
 	
 	render() {
