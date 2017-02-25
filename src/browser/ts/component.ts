@@ -71,12 +71,12 @@ abstract class Component<P, S> extends ReactComponent<P, S> {
 		return moment().hour(0).minute(0).second(time / 1000).format('HH:mm:ss');
 	}
 	
-	get createUrl() {
-		return '/create';
+	get recordUrl() {
+		return '/record';
 	}
 	
-	getCreateUrl(id: string) {
-		return `${this.createUrl}/${id}`;
+	getRecordUrl(id: string) {
+		return `${this.recordUrl}/${id}`;
 	}
 	
 	getReplayUrl(id: string) {

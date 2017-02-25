@@ -5,7 +5,7 @@ import * as ReactGA from 'react-ga';
 import Welcome from './welcome/welcome';
 import Replay from './replay/replay';
 import NotFound from './notfound/notfound';
-import Create from './create/create';
+import Record from './record/record';
 
 // ReactGA.initialize('', {
 // 	debug: process.env.NODE_ENV !== 'production'
@@ -23,7 +23,7 @@ export default class Routes extends Component<{}, {}> {
 			<Router history={browserHistory} onUpdate={this.attach(this.onUpdate)}>
 				<Route path="/" component={Welcome}/>
 				<Route path="/r(/:id)" component={Replay}/>
-				<Route path="/create(/:id)" component={Create}/>
+				<Route path="/record(/:id)" component={Record}/>
 				<Route path='*' component={NotFound}/>
 			</Router>
 		);

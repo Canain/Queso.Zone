@@ -11,13 +11,13 @@ import Editor from '../editor';
 import Button from '../button';
 import RelativeTime from '../relativetime';
 
-export interface CreateProps {
+export interface RecordProps {
 	params: {
 		id?: string;
 	};
 }
 
-export default class Create extends Component<CreateProps, {
+export default class Record extends Component<RecordProps, {
 	output?: string;
 	name?: string;
 	code?: string;
@@ -30,7 +30,7 @@ export default class Create extends Component<CreateProps, {
 	
 	replay: Reference;
 	
-	componentPropsChanged(nextProps: CreateProps) {
+	componentPropsChanged(nextProps: RecordProps) {
 		if (!nextProps.params.id) {
 			return this.init().catch(this.catch);
 		}
@@ -121,7 +121,7 @@ export default class Create extends Component<CreateProps, {
 	}
 	
 	async init() {
-		browserHistory.push(this.getCreateUrl(this.pushRef(this.replays).key));
+		browserHistory.push(this.getRecordUrl(this.pushRef(this.replays).key));
 	}
 	
 	async onRecord() {
@@ -146,7 +146,7 @@ export default class Create extends Component<CreateProps, {
 	
 	render() {
 		return (
-			<Page className="create" title="Create">
+			<Page className="record" title="Record">
 				<Container>
 					<input placeholder="Tutorial Name" value={this.state.name || ''} onChange={this.attach(this.onName)} disabled={!!this.state.done}/>
 				</Container>
