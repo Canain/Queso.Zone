@@ -3,6 +3,8 @@ import { Component as ReactComponent, CSSProperties } from 'react';
 import * as shallowequal from 'shallowequal';
 import * as firebase from 'firebase';
 
+import generatePushID from './generatepushid';
+
 export type DataSnapshot = firebase.database.DataSnapshot;
 export type Reference = firebase.database.Reference;
 
@@ -30,6 +32,10 @@ abstract class Component<P, S> extends ReactComponent<P, S> {
 	
 	getReplay(id: ReplayId) {
 		return typeof id === 'string' ? this.replays.child(id) : id;
+	}
+	
+	getReplayUid(id: ReplayId) {
+		return this.getReplay(id).child('uid');
 	}
 	
 	getReplayName(id: ReplayId) {
@@ -135,6 +141,10 @@ abstract class Component<P, S> extends ReactComponent<P, S> {
 	get uid() {
 		const currentUser = firebase.auth().currentUser;
 		return currentUser ? currentUser.uid : null;
+	}
+	
+	pushRef(ref: Reference) {
+		return ref.child(generatePushID());
 	}
 	
 	ref(path: string) {

@@ -50,7 +50,7 @@ export default class Create extends Component<CreateProps, {
 	
 	async updateInitial() {
 		const data = await this.replay.once('value') as DataSnapshot;
-		const val = data.val();
+		const val = data.val() || {};
 		await this.update({
 			done: val.recording,
 			name: val.name,
@@ -93,13 +93,11 @@ export default class Create extends Component<CreateProps, {
 	}
 	
 	async init() {
-		const ref = await this.push(this.replays, {
-			uid: this.uid
-		});
-		browserHistory.push(this.getCreateUrl(ref.key));
+		browserHistory.push(this.getCreateUrl(this.pushRef(this.replays).key));
 	}
 	
 	async onRecord() {
+		await this.set(this.getReplayUid(this.replay), this.uid);
 		await Promise.all([this.update({
 			recording: true,
 			start: this.now

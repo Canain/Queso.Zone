@@ -45,6 +45,10 @@ export default class Toolbar extends Component<{}, {
 		}
 	}
 	
+	async onCreate() {
+		browserHistory.push(this.getCreateUrl(this.pushRef(this.replays).key));
+	}
+	
 	render() {
 		return (
 			<div className="toolbar">
@@ -54,11 +58,9 @@ export default class Toolbar extends Component<{}, {
 					</div>
 					<div>
 						{!this.state.loggedIn ? null :
-							<div>
-								<Link to={this.createUrl}>
-									<h2>Create</h2>
-								</Link>
-							</div>
+							<Button onClick={this.attach(this.onCreate)}>
+								<h2>Create</h2>
+							</Button>
 						}
 						{this.state.loggedIn ?
 							<Button onClick={this.attach(this.onLogout)} disabled={this.state.disabled}>
