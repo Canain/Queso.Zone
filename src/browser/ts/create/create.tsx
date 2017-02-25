@@ -124,22 +124,25 @@ export default class Create extends Component<CreateProps, {
 							this.code.getCodeMirror().off('cursorActivity', this.onCursorAttached);
 							this.code.getCodeMirror().on('cursorActivity', this.onCursorAttached);
 						}
-					}}>
-					{this.state.recording ? 
-						<Button onClick={this.attach(this.onStop)}>
-							<StopIcon size={styles.editorIconSize} color={styles.editorRecordColor}/>
-						</Button> :
-						this.state.done ? 
-						<div>
-							<Link to={this.getReplayUrl(this.props.params.id)}>
-								<ViewIcon size={styles.editorIconSize}/>
-							</Link>
-						</div> :
-						<Button onClick={this.attach(this.onRecord)}>
-							<RecordIcon size={styles.editorIconSize} color={styles.editorRecordColor}/>
-						</Button>
-					}
-				</Editor>
+					}}/>
+				<Container className="bottom">
+					<div className="editor box">
+						{this.state.recording ? 
+							<Button onClick={this.attach(this.onStop)}>
+								<StopIcon size={styles.editorIconSize} color={styles.editorRecordColor}/>
+							</Button> :
+							this.state.done ? 
+							<div>
+								<Link to={this.getReplayUrl(this.props.params.id)}>
+									<ViewIcon size={styles.editorIconSize}/>
+								</Link>
+							</div> :
+							<Button onClick={this.attach(this.onRecord)}>
+								<RecordIcon size={styles.editorIconSize} color={styles.editorRecordColor}/>
+							</Button>
+						}
+					</div>
+				</Container>
 			</Page>
 		);
 	}

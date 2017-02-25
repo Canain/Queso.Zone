@@ -181,6 +181,8 @@ $inputSize: 24px;
 		width: 100%;
 		font-size: $inputSize;
 		
+		padding: 0;
+		
 		color: $dark;
 		
 		border: none;
@@ -198,7 +200,7 @@ $inputSize: 24px;
 
 .replay {
 	h3 {
-		line-height: calc($inputHeight - 1px);
+		line-height: calc($inputHeight + 1px);
 		font-size: 24px;
 		margin: 0;
 	}
