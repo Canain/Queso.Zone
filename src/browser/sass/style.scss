@@ -1,5 +1,6 @@
 $primary: #2196F3;
 $light: white;
+$greyish: #eee;
 $grey: #ccc;
 $well: #f2f2f2;
 $dark: #333;
@@ -129,10 +130,34 @@ body {
 		border: none;
 	}
 	
+	$editor: 48px;
+	
 	.editor {
-		height: 48px;
+		height: $editor;
 		width: 100%;
 		background-color: $light;
+		
+		display: flex;
+		flex-direction: row;
+		
+		> div {
+			height: $editor;
+			width: $editor;
+			color: $dark;
+			
+			display: flex;
+			flex-direction: row;
+			flex-wrap: nowrap;
+			justify-content: center;
+			align-items: center;
+			align-content: stretch;
+			
+			transition: background-color 0.1s ease-in-out;
+			
+			&:hover {
+				background-color: $greyish;
+			}
+		}
 	}
 	
 	textarea {

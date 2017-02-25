@@ -3,8 +3,10 @@ import { browserHistory } from 'react-router';
 import RecordIcon from 'react-icons/md/fiber-manual-record';
 import RunIcon from 'react-icons/md/play-arrow';
 
+import * as styles from '../styles';
 import Page from '../page';
 import Container from '../container';
+import Button from '../button';
 
 export interface CreateProps {
 	params: {
@@ -72,12 +74,12 @@ export default class Create extends Component<CreateProps, {
 				<Container>
 					<div className="box">
 						<div className="editor">
-							<div>
-								<RunIcon/>
-							</div>
-							<div>
-								<RecordIcon/>
-							</div>
+							<Button>
+								<RunIcon size={styles.editorIconSize}/>
+							</Button>
+							<Button>
+								<RecordIcon size={styles.editorIconSize} color={styles.editorRecordColor}/>
+							</Button>
 						</div>
 						<hr/>
 						<textarea className="code" ref={ref => this.editor = ref}/>
