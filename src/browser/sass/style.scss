@@ -1,12 +1,16 @@
 $primary: #2196F3;
 $light: white;
 $grey: #ccc;
+$well: #f2f2f2;
 
-$surround: 16px;
+$surround: 24px;
+
+$zDepth2: rgba(0, 0, 0, 0.156863) 0px 3px 10px, rgba(0, 0, 0, 0.227451) 0px 3px 10px;
 
 body {
 	margin: 0;
 	font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
+	background-color: $well;
 }
 
 .container {
@@ -36,7 +40,7 @@ body {
 	background-color: $primary;
 	color: $light;
 	
-	box-shadow: 0 2px 5px rgba(0,0,0,.26);
+	box-shadow: $zDepth2;
 	
 	$height: 64px;
 	
@@ -84,16 +88,45 @@ body {
 
 .create {
 	input {
-		height: 40px;
+		height: 48px;
 		width: 100%;
-		font-size: 20px;
+		font-size: 24px;
 		
 		border: none;
 		border-bottom: solid $grey 1px;
+		
+		transition: border 0.2s ease-in-out;
 		
 		&:focus {
 			outline: none;
 			border-bottom: solid $primary 2px;
 		}
+		
+		background-color: transparent;
+	}
+	
+	textarea {
+		width: calc(100% - 2 * $surround);
+		
+		padding: $surround;
+	
+		box-shadow: $zDepth2;
+		
+		font-size: 18px;
+		
+		resize: none;
+		border: none;
+		
+		&:focus {
+			outline: none;
+		}
+	}
+	
+	.code {
+		height: 400px;
+	}
+	
+	.output {
+		height: 100px;
 	}
 }

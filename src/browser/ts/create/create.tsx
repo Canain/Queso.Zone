@@ -41,6 +41,12 @@ export default class Create extends Component<CreateProps, {}> {
 				<Container>
 					<input placeholder="Name"/>
 				</Container>
+				<Container>
+					<textarea className="code"/>
+				</Container>
+				<Container>
+					<textarea className="output" disabled={true}/>
+				</Container>
 			</Page>
 		);
 	}
