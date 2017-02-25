@@ -5,6 +5,7 @@ $surround: 16px;
 
 body {
 	margin: 0;
+	font: Arial, Helvetica Neue, Helvetica, sans-serif;
 }
 
 .container {
@@ -18,6 +19,15 @@ body {
 	
 	&.small {
 		max-width: calc($small - $surround * 2);
+	}
+}
+
+.button {
+	&:hover {
+		cursor: pointer;
+	}
+	&.disabled:hover {
+		cursor: default;
 	}
 }
 
@@ -47,6 +57,9 @@ body {
 		h1, h2 {
 			margin: 0;
 			line-height: $height;
+		}
+		
+		h2 {
 		}
 	}
 }
