@@ -142,6 +142,7 @@ export default class Record extends Component<RecordProps, {
 			recording: false,
 			done: this.now - this.state.start
 		});
+		browserHistory.push(this.getReplayUrl(this.props.params.id));
 	}
 	
 	render() {
