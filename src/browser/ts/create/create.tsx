@@ -98,6 +98,10 @@ export default class Create extends Component<CreateProps, {
 	
 	async onRecord() {
 		await this.set(this.getReplayUid(this.replay), this.uid);
+		await this.set(this.getReplayInitial(this.replay), {
+			code: this.state.code || '',
+			history: JSON.stringify(this.code.getCodeMirror().getDoc().getHistory())
+		})
 		await Promise.all([this.update({
 			recording: true,
 			start: this.now
