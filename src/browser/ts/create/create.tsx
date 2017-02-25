@@ -25,6 +25,8 @@ export default class Create extends Component<CreateProps, {
 	start?: number;
 }> {
 	
+	code: HTMLTextAreaElement;
+	
 	replay: Reference;
 	
 	componentPropsChanged(nextProps: CreateProps) {
@@ -107,6 +109,7 @@ export default class Create extends Component<CreateProps, {
 			recording: true,
 			start: this.now
 		}), this.set(this.getReplayRecording(this.replay), true)]);
+		this.code.focus();
 	}
 	
 	async onStop() {
@@ -122,7 +125,7 @@ export default class Create extends Component<CreateProps, {
 				<Container>
 					<input placeholder="Tutorial Name" value={this.state.name || ''} onChange={this.attach(this.onName)} disabled={this.state.done}/>
 				</Container>
-				<Editor disabled={this.state.done} code={this.state.code || ''} onCode={this.attach(this.onCode)} onCodeDown={this.attach(this.onCodeDown)} onCodeSelect={this.attach(this.onCodeSelect)} output={this.state.output}>
+				<Editor disabled={this.state.done} code={this.state.code || ''} onCode={this.attach(this.onCode)} onCodeDown={this.attach(this.onCodeDown)} onCodeSelect={this.attach(this.onCodeSelect)} output={this.state.output} onCodeRef={ref => this.code = ref}>
 					{this.state.recording ? 
 						<Button onClick={this.attach(this.onStop)}>
 							<StopIcon size={styles.editorIconSize} color={styles.editorRecordColor}/>
