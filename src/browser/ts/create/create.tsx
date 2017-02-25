@@ -71,6 +71,7 @@ export default class Create extends Component<CreateProps, {
 	}
 	
 	async onCode(code: string) {
+		const now = this.now;
 		await this.update({
 			code
 		});
@@ -79,7 +80,6 @@ export default class Create extends Component<CreateProps, {
 			history: JSON.stringify(this.code.getCodeMirror().getDoc().getHistory())
 		};
 		if (this.state.recording) {
-			const now = this.now;
 			if (!this.state.start) {
 				await this.update({
 					start: now
@@ -95,6 +95,7 @@ export default class Create extends Component<CreateProps, {
 	onCursorAttached = this.attach(this.onCursor);
 	
 	async onCursor(editor: CodeMirror.Editor) {
+		const now = this.now;
 		if (!this.state.recording) {
 			return;
 		}
@@ -111,7 +112,6 @@ export default class Create extends Component<CreateProps, {
 				ch: head.ch
 			}
 		};
-		const now = this.now;
 		if (!this.state.start) {
 			await this.update({
 				start: now
