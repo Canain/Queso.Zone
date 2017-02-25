@@ -45,7 +45,9 @@ export default class Create extends Component<CreateProps, {}> {
 					<textarea className="code"/>
 				</Container>
 				<Container>
-					<textarea className="output" disabled={true}/>
+					<textarea className="output" disabled={true}>
+						Output:
+					</textarea>
 				</Container>
 			</Page>
 		);

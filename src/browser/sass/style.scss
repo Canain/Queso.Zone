@@ -2,6 +2,8 @@ $primary: #2196F3;
 $light: white;
 $grey: #ccc;
 $well: #f2f2f2;
+$dark: #333;
+$darkish: #757575;
 
 $surround: 24px;
 
@@ -11,6 +13,7 @@ body {
 	margin: 0;
 	font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
 	background-color: $well;
+	color: $dark;
 }
 
 .container {
@@ -77,6 +80,10 @@ body {
 			margin: 0;
 			line-height: $height;
 		}
+		
+		h2 {
+			font-weight: normal;
+		}
 	}
 }
 
@@ -91,6 +98,8 @@ body {
 		height: 48px;
 		width: 100%;
 		font-size: 24px;
+		
+		color: $dark;
 		
 		border: none;
 		border-bottom: solid $grey 1px;
@@ -107,6 +116,10 @@ body {
 	
 	textarea {
 		width: calc(100% - 2 * $surround);
+		
+		font-family: Consolas, Monaco, Courier New, Courier, monospace;
+		
+		color: $dark;
 		
 		padding: $surround;
 	
@@ -128,5 +141,6 @@ body {
 	
 	.output {
 		height: 100px;
+		color: $darkish;
 	}
 }
