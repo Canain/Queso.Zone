@@ -1,4 +1,4 @@
-import Component, { React } from '../component';
+import Component, { React, Reference, DataSnapshot } from '../component';
 import { browserHistory } from 'react-router';
 
 import Page from '../page';
@@ -12,13 +12,19 @@ export interface CreateProps {
 
 export default class Create extends Component<CreateProps, {
 	output?: string;
+	name?: string;
 }> {
+	
+	replay: Reference;
+	
+	editor: HTMLTextAreaElement;
 	
 	componentPropsChanged(nextProps: CreateProps) {
 		if (!nextProps.params.id) {
 			return this.init().catch(this.catch);
 		}
-		this.catchUpdate();
+		this.replay = this.ref('replays').child(nextProps.params.id);
+		this.updateInitial().then(() => this.update()).catch(this.catch);
 	}
 	
 	componentWillMount() {
@@ -28,6 +34,24 @@ export default class Create extends Component<CreateProps, {
 		if (!this.props.params.id) {
 			return this.init().catch(this.catch);
 		}
+		this.replay = this.ref('replays').child(this.props.params.id);
+		this.updateInitial().catch(this.catch);
+	}
+	
+	async updateInitial() {
+		const data = await this.replay.once('value') as DataSnapshot;
+		const val = data.val();
+		await this.update({
+			name: val.name
+		});
+	}
+	
+	async onName(e: React.ChangeEvent<HTMLInputElement>) {
+		const name = e.target.value;
+		await this.update({
+			name
+		});
+		await this.set(this.replay.child('name'), name);
 	}
 	
 	async init() {
@@ -41,7 +65,7 @@ export default class Create extends Component<CreateProps, {
 		return (
 			<Page className="create" title="Create">
 				<Container>
-					<input placeholder="Tutorial Name"/>
+					<input placeholder="Tutorial Name" value={this.state.name || ''} onChange={this.attach(this.onName)}/>
 				</Container>
 				<Container>
 					<div className="box">
@@ -49,7 +73,7 @@ export default class Create extends Component<CreateProps, {
 							
 						</div>
 						<hr/>
-						<textarea className="code"/>
+						<textarea className="code" ref={ref => this.editor = ref}/>
 					</div>
 				</Container>
 				<Container>

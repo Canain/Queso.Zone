@@ -3,6 +3,9 @@ import { Component as ReactComponent, CSSProperties } from 'react';
 import * as shallowequal from 'shallowequal';
 import * as firebase from 'firebase';
 
+export type DataSnapshot = firebase.database.DataSnapshot;
+export type Reference = firebase.database.Reference;
+
 export { React, CSSProperties };
 
 interface Component<P, S> {
@@ -61,10 +64,6 @@ abstract class Component<P, S> extends ReactComponent<P, S> {
 			return ret;
 		} as any;
 		return proxy as T;
-	}
-	
-	async handleError(error: Error) {
-		console.error(error);
 	}
 	
 	report(e: Error) {
