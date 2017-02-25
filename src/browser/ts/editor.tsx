@@ -32,13 +32,12 @@ export default class Editor extends Component<{
 							readOnly: this.props.disabled,
 							lineNumbers: true
 						}}/>
+						<hr/>
+						<CodeMirror className="output" value={`Output:\n${this.props.output || ''}`} options={{
+							readOnly: true,
+							lineNumbers: true
+						}}/>
 					</div>
-				</Container>
-				<Container>
-					<CodeMirror className="output box" value={`Output:\n${this.props.output || ''}`} options={{
-						readOnly: true,
-						lineNumbers: true
-					}}/>
 				</Container>
 			</div>
 		);

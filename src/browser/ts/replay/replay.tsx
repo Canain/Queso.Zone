@@ -143,7 +143,7 @@ export default class Replay extends Component<{
 		return (
 			<Page redirect={this.props.params ? null : '/'} className="replay" title="Replay">
 				<Container>
-					<h3>{this.state.name}</h3>
+					<h3>{this.state.name || 'Untitled'}</h3>
 				</Container>
 				<Editor code={this.state.code} output={this.state.output} onCodeRef={ref => this.code = ref}/>
 				<Container className="bottom">

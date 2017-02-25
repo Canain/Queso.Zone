@@ -168,11 +168,15 @@ hr {
 }
 
 .code {
-	height: 300px;
+	.CodeMirror {
+		height: 300px;
+	}
 }
 
 .output {
-	height: 100px;
+	.CodeMirror {
+		height: 100px;
+	}
 }
 
 textarea:disabled {
