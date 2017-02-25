@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Component as ReactComponent, CSSProperties } from 'react';
 import * as shallowequal from 'shallowequal';
 import * as firebase from 'firebase';
+import * as moment from 'moment';
 
 import generatePushID from './generatepushid';
 
@@ -64,6 +65,10 @@ abstract class Component<P, S> extends ReactComponent<P, S> {
 	
 	getReplayRecording(id: ReplayId) {
 		return this.getReplay(id).child('recording');
+	}
+	
+	formatTime(time: number) {
+		return moment().hour(0).minute(0).second(time / 1000).format('HH:mm:ss');
 	}
 	
 	get createUrl() {

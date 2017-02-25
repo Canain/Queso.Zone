@@ -9,6 +9,7 @@ import Page from '../page';
 import Container from '../container';
 import Editor from '../editor';
 import Button from '../button';
+import RelativeTime from '../relativetime';
 
 export interface CreateProps {
 	params: {
@@ -21,14 +22,13 @@ export default class Create extends Component<CreateProps, {
 	name?: string;
 	code?: string;
 	recording?: boolean;
-	done?: boolean;
+	done?: number;
+	start?: number;
 }> {
 	
 	code: ReactCodeMirror.ReactCodeMirror;
 	
 	replay: Reference;
-	
-	start: number;
 	
 	componentPropsChanged(nextProps: CreateProps) {
 		if (!nextProps.params.id) {
@@ -80,10 +80,12 @@ export default class Create extends Component<CreateProps, {
 		};
 		if (this.state.recording) {
 			const now = this.now;
-			if (!this.start) {
-				this.start = now;
+			if (!this.state.start) {
+				await this.update({
+					start: now
+				});
 			}
-			return await this.set(this.getReplayCode(this.replay, now - this.start), send);
+			return await this.set(this.getReplayCode(this.replay, now - this.state.start), send);
 		}
 		await this.set(this.getReplayInitial(this.replay), send);
 	}
@@ -95,10 +97,12 @@ export default class Create extends Component<CreateProps, {
 			return;
 		}
 		const now = this.now;
-		if (!this.start) {
-			this.start = now;
+		if (!this.state.start) {
+			await this.update({
+				start: now
+			});
 		}
-		await this.set(this.getReplaySelect(this.replay, now - this.start), JSON.stringify(editor.getDoc().listSelections()));
+		await this.set(this.getReplaySelect(this.replay, now - this.state.start), JSON.stringify(editor.getDoc().listSelections()));
 	}
 	
 	async init() {
@@ -111,9 +115,9 @@ export default class Create extends Component<CreateProps, {
 			code: this.state.code || '',
 			history: JSON.stringify(this.code.getCodeMirror().getDoc().getHistory())
 		})
-		this.start = null;
 		await Promise.all([this.update({
-			recording: true
+			recording: true,
+			start: null
 		}), this.set(this.getReplayRecording(this.replay), true)]);
 		this.code.focus();
 	}
@@ -121,7 +125,7 @@ export default class Create extends Component<CreateProps, {
 	async onStop() {
 		await this.update({
 			recording: false,
-			done: true
+			done: this.now - this.state.start
 		});
 	}
 	
@@ -129,9 +133,9 @@ export default class Create extends Component<CreateProps, {
 		return (
 			<Page className="create" title="Create">
 				<Container>
-					<input placeholder="Tutorial Name" value={this.state.name || ''} onChange={this.attach(this.onName)} disabled={this.state.done}/>
+					<input placeholder="Tutorial Name" value={this.state.name || ''} onChange={this.attach(this.onName)} disabled={!!this.state.done}/>
 				</Container>
-				<Editor disabled={this.state.done} code={this.state.code || ''} onCode={this.attach(this.onCode)} output={this.state.output} onCodeRef={ref => {
+				<Editor disabled={!!this.state.done} code={this.state.code || ''} onCode={this.attach(this.onCode)} output={this.state.output} onCodeRef={ref => {
 						this.code = ref;
 						if (this.code) {
 							this.code.getCodeMirror().off('cursorActivity', this.onCursorAttached);
@@ -154,6 +158,14 @@ export default class Create extends Component<CreateProps, {
 								<RecordIcon size={styles.editorIconSize} color={styles.editorRecordColor}/>
 							</Button>
 						}
+						<div className="clock">
+							{this.state.start ? 
+								this.state.done ?
+									<span>{this.formatTime(this.state.done)}</span> :
+									<RelativeTime start={this.state.start}/>
+								 : '00:00:00'
+							}
+						</div>
 					</div>
 				</Container>
 			</Page>

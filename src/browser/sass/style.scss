@@ -128,6 +128,13 @@ hr {
 		width: $editor;
 		color: $dark;
 		
+		&.clock {
+			width: calc($editor * 1.5);
+			&:hover {
+				background-color: transparent;
+			}
+		}
+		
 		display: flex;
 		flex-direction: row;
 		flex-wrap: nowrap;
