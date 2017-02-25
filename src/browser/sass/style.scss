@@ -186,11 +186,10 @@ $inputSize: 24px;
 		border: none;
 		border-bottom: solid $grey 1px;
 		
-		transition: border 0.2s ease-in-out;
-		
 		&:focus {
 			outline: none;
 			border-bottom: solid $primary 2px;
+			margin-bottom: -1px;
 		}
 		
 		background-color: transparent;
