@@ -106,7 +106,7 @@ export default class Create extends Component<CreateProps, {
 		return (
 			<Page className="create" title="Create">
 				<Container>
-					<input placeholder="Tutorial Name" value={this.state.name || ''} onChange={this.attach(this.onName)}/>
+					<input placeholder="Tutorial Name" value={this.state.name || ''} onChange={this.attach(this.onName)} disabled={this.state.done}/>
 				</Container>
 				<Container>
 					<div className="box">
