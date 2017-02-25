@@ -72,6 +72,7 @@ export default class Replay extends Component<{
 				selection
 			});
 		}
+		select.sort((a, b) => a.time - b.time);
 		if (initial) {
 			initial.history = JSON.parse(initial.history);
 		}
