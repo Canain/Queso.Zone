@@ -25,6 +25,7 @@ export default class Replay extends Component<{
 	output?: string;
 	playing?: boolean;
 	started?: number;
+	offset?: number;
 }> {
 	
 	componentWillMount() {
@@ -49,7 +50,8 @@ export default class Replay extends Component<{
 			initial,
 			code: initial,
 			name,
-			replay
+			replay,
+			offset: replay.length ? replay[0].time : 0
 		});
 	}
 	
@@ -60,7 +62,7 @@ export default class Replay extends Component<{
 			let i;
 			for (i = 0; i < this.state.replay.length; i++) {
 				const replay = this.state.replay[i];
-				if (replay.time > now) {
+				if ((replay.time - this.state.offset) > now) {
 					break;
 				}
 				last = replay;
