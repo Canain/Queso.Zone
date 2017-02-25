@@ -1,5 +1,7 @@
 import Component, { React, Reference, DataSnapshot } from '../component';
 import { browserHistory } from 'react-router';
+import RecordIcon from 'react-icons/md/fiber-manual-record';
+import RunIcon from 'react-icons/md/play-arrow';
 
 import Page from '../page';
 import Container from '../container';
@@ -70,7 +72,12 @@ export default class Create extends Component<CreateProps, {
 				<Container>
 					<div className="box">
 						<div className="editor">
-							
+							<div>
+								<RunIcon/>
+							</div>
+							<div>
+								<RecordIcon/>
+							</div>
 						</div>
 						<hr/>
 						<textarea className="code" ref={ref => this.editor = ref}/>

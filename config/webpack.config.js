@@ -16,6 +16,10 @@ module.exports = {
 	module: {
 		loaders: [
 			{
+				test: /react-icons\/(.)*(.js)$/,
+				loader: 'babel-loader'
+			},
+			{
 				test: /\.tsx?$/,
 				loader: 'awesome-typescript-loader'
 			},
