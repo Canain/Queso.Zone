@@ -172,7 +172,7 @@ textarea {
 }
 
 .code {
-	height: 400px;
+	height: 300px;
 }
 
 .output {
@@ -188,9 +188,9 @@ $inputSize: 24px;
 
 .create {
 	input {
-		height: $inputSize;
+		height: $inputHeight;
 		width: 100%;
-		font-size: 24px;
+		font-size: $inputSize;
 		
 		color: $dark;
 		
@@ -210,8 +210,12 @@ $inputSize: 24px;
 
 .replay {
 	h3 {
-		line-height: $inputHeight;
+		line-height: calc($inputHeight - 1px);
 		font-size: 24px;
 		margin: 0;
 	}
+}
+
+.bottom {
+	padding-top: 0;
 }
