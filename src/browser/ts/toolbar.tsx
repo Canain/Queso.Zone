@@ -31,6 +31,17 @@ export default class Toolbar extends Component<{}, {
 		});
 	}
 	
+	async onLogout() {
+		await this.update({
+			disabled: true
+		});
+		await firebase.auth().signOut();
+		await this.update({
+			disabled: false,
+			loggedIn: this.loggedIn
+		});
+	}
+	
 	async onCreate() {
 		await this.update({
 			disabled: true
@@ -46,8 +57,8 @@ export default class Toolbar extends Component<{}, {
 					</div>
 					<div>
 						{this.state.loggedIn ?
-							<Button onClick={this.attach(this.onCreate)} disabled={this.state.disabled}>
-								<h2>Create</h2>
+							<Button onClick={this.attach(this.onLogout)} disabled={this.state.disabled}>
+								<h2>Logout</h2>
 							</Button> :
 							<Button onClick={this.attach(this.onLogin)} disabled={this.state.disabled}>
 								<h2>Login</h2>
