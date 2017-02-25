@@ -1,13 +1,13 @@
 import Component, { React, Reference, DataSnapshot } from '../component';
 import { Link, browserHistory } from 'react-router';
 import RecordIcon from 'react-icons/md/fiber-manual-record';
-import RunIcon from 'react-icons/md/play-arrow';
 import StopIcon from 'react-icons/md/stop';
 import ViewIcon from 'react-icons/md/pageview';
 
 import * as styles from '../styles';
 import Page from '../page';
 import Container from '../container';
+import Editor from '../editor';
 import Button from '../button';
 
 export interface CreateProps {
@@ -109,34 +109,22 @@ export default class Create extends Component<CreateProps, {
 				<Container>
 					<input placeholder="Tutorial Name" value={this.state.name || ''} onChange={this.attach(this.onName)} disabled={this.state.done}/>
 				</Container>
-				<Container>
-					<div className="box">
-						<div className="editor">
-							<Button>
-								<RunIcon size={styles.editorIconSize}/>
-							</Button>
-							{this.state.recording ? 
-								<Button onClick={this.attach(this.onStop)}>
-									<StopIcon size={styles.editorIconSize} color={styles.editorRecordColor}/>
-								</Button> :
-								this.state.done ? 
-								<div>
-									<Link to={`/r/${this.props.params.id}`}>
-										<ViewIcon size={styles.editorIconSize}/>
-									</Link>
-								</div> :
-								<Button onClick={this.attach(this.onRecord)}>
-									<RecordIcon size={styles.editorIconSize} color={styles.editorRecordColor}/>
-								</Button>
-							}
-						</div>
-						<hr/>
-						<textarea className="code" disabled={this.state.done} value={this.state.code || ''} onChange={this.attach(this.onCode)} onKeyDown={this.attach(this.onCodeDown)}/>
-					</div>
-				</Container>
-				<Container>
-					<textarea className="output box" disabled={true} value={`Output:\n${this.state.output || ''}`}/>
-				</Container>
+				<Editor disabled={this.state.done} code={this.state.code || ''} onCode={this.attach(this.onCode)} onCodeDown={this.attach(this.onCodeDown)} output={this.state.output}>
+					{this.state.recording ? 
+						<Button onClick={this.attach(this.onStop)}>
+							<StopIcon size={styles.editorIconSize} color={styles.editorRecordColor}/>
+						</Button> :
+						this.state.done ? 
+						<div>
+							<Link to={`/r/${this.props.params.id}`}>
+								<ViewIcon size={styles.editorIconSize}/>
+							</Link>
+						</div> :
+						<Button onClick={this.attach(this.onRecord)}>
+							<RecordIcon size={styles.editorIconSize} color={styles.editorRecordColor}/>
+						</Button>
+					}
+				</Editor>
 			</Page>
 		);
 	}
