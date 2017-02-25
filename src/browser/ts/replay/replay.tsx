@@ -71,7 +71,9 @@ export default class Replay extends Component<{
 				selections
 			});
 		}
-		initial.history = JSON.parse(initial.history);
+		if (initial) {
+			initial.history = JSON.parse(initial.history);
+		}
 		await this.update({
 			initial,
 			code: initial ? initial.code : '',
@@ -113,7 +115,12 @@ export default class Replay extends Component<{
 			await Promise.all([this.update({
 				code: lastCode ? lastCode.code.code : this.state.initial.code,
 				playing: i !== this.state.replay.length || j !== this.state.select.length
-			}).then(() => lastSelect ? this.code.getCodeMirror().getDoc()['setSelections'](lastSelect.selections) : null), this.animationFrame()]);
+			}).then(() => {
+				this.code.getCodeMirror().getDoc().setHistory(lastCode ? lastCode.code.history : this.state.initial.history);
+				if (lastSelect) {
+					this.code.getCodeMirror().getDoc()['setSelections'](lastSelect.selections);
+				}
+			}), this.animationFrame()]);
 		} while (this.state.playing);
 	}
 	

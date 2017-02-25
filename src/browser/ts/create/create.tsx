@@ -56,7 +56,9 @@ export default class Create extends Component<CreateProps, {
 			name: val.name,
 			code: val.initial ? val.initial.code : ''
 		});
-		this.code.getCodeMirror().getDoc().setHistory(JSON.parse(val.initial.history));
+		if (val.initial) {
+			this.code.getCodeMirror().getDoc().setHistory(JSON.parse(val.initial.history));
+		}
 	}
 	
 	async onName(e: React.ChangeEvent<HTMLInputElement>) {
