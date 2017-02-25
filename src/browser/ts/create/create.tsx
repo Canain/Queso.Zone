@@ -72,6 +72,19 @@ export default class Create extends Component<CreateProps, {
 		await this.set(this.state.recording ? this.getReplayCode(this.replay, this.now - this.state.start) : this.getReplayInitial(this.replay), code);
 	}
 	
+	async onCodeSelect(e: React.SyntheticEvent<HTMLTextAreaElement>) {
+		const target = e.target as HTMLTextAreaElement;
+		if (!this.state.recording) {
+			return;
+		}
+		
+		const { selectionStart, selectionEnd } = target;
+		await this.set(this.getReplaySelect(this.replay, this.now - this.state.start), {
+			selectionStart,
+			selectionEnd
+		});
+	}
+	
 	async init() {
 		const ref = await this.push(this.replays, {
 			uid: this.uid
@@ -109,7 +122,7 @@ export default class Create extends Component<CreateProps, {
 				<Container>
 					<input placeholder="Tutorial Name" value={this.state.name || ''} onChange={this.attach(this.onName)} disabled={this.state.done}/>
 				</Container>
-				<Editor disabled={this.state.done} code={this.state.code || ''} onCode={this.attach(this.onCode)} onCodeDown={this.attach(this.onCodeDown)} output={this.state.output}>
+				<Editor disabled={this.state.done} code={this.state.code || ''} onCode={this.attach(this.onCode)} onCodeDown={this.attach(this.onCodeDown)} onCodeSelect={this.attach(this.onCodeSelect)} output={this.state.output}>
 					{this.state.recording ? 
 						<Button onClick={this.attach(this.onStop)}>
 							<StopIcon size={styles.editorIconSize} color={styles.editorRecordColor}/>

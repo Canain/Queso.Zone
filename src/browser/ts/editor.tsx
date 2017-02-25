@@ -11,6 +11,8 @@ export default class Editor extends Component<{
 	output: string;
 	onCode?: React.EventHandler<React.ChangeEvent<HTMLTextAreaElement>>;
 	onCodeDown?: React.EventHandler<React.KeyboardEvent<HTMLTextAreaElement>>;
+	onCodeSelect?: React.EventHandler<React.SyntheticEvent<HTMLTextAreaElement>>;
+	onCodeRef?: (ref: HTMLTextAreaElement) => void;
 }, {}> {
 	render() {
 		return (
@@ -24,7 +26,7 @@ export default class Editor extends Component<{
 							{this.props.children}
 						</div>
 						<hr/>
-						<textarea className="code" disabled={this.props.disabled} value={this.props.code} onChange={this.props.onCode} onKeyDown={this.props.onCodeDown}/>
+						<textarea className="code" disabled={this.props.disabled} value={this.props.code} onChange={this.props.onCode} onKeyDown={this.props.onCodeDown} onSelect={this.props.onCodeSelect} ref={this.props.onCodeRef}/>
 					</div>
 				</Container>
 				<Container>

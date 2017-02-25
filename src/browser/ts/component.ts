@@ -44,6 +44,10 @@ abstract class Component<P, S> extends ReactComponent<P, S> {
 		return this.getReplay(id).child('code').child(offset.toString().replace(/\./g, '-'));
 	}
 	
+	getReplaySelect(id: ReplayId, offset: number) {
+		return this.getReplay(id).child('select').child(offset.toString().replace(/\./g, '-'));
+	}
+	
 	getReplayRecording(id: ReplayId) {
 		return this.getReplay(id).child('recording');
 	}
