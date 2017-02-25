@@ -76,6 +76,9 @@ export default class Replay extends Component<{
 	
 	async animate() {
 		do {
+			if (!this.code) {
+				return;
+			}
 			this.code.focus();
 			let lastCode = null as CodeReplay;
 			const now = this.now - this.state.started;
