@@ -2,6 +2,7 @@ import Component, { React, Reference, DataSnapshot } from '../component';
 import { browserHistory } from 'react-router';
 import RecordIcon from 'react-icons/md/fiber-manual-record';
 import RunIcon from 'react-icons/md/play-arrow';
+import StopIcon from 'react-icons/md/stop';
 
 import * as styles from '../styles';
 import Page from '../page';
@@ -18,6 +19,9 @@ export default class Create extends Component<CreateProps, {
 	output?: string;
 	name?: string;
 	code?: string;
+	recording?: boolean;
+	done?: boolean;
+	start?: number;
 }> {
 	
 	replay: Reference;
@@ -45,6 +49,7 @@ export default class Create extends Component<CreateProps, {
 		const data = await this.replay.once('value') as DataSnapshot;
 		const val = data.val();
 		await this.update({
+			done: val.recording,
 			name: val.name,
 			code: val.initial
 		});
@@ -63,7 +68,7 @@ export default class Create extends Component<CreateProps, {
 		await this.update({
 			code
 		});
-		await this.set(this.replay.child('initial'), code);
+		await this.set(this.state.recording ? this.replay.child('code').child((this.now - this.state.start).toString().replace(/\./g, '-')) : this.replay.child('initial'), code);
 	}
 	
 	async init() {
@@ -71,6 +76,30 @@ export default class Create extends Component<CreateProps, {
 			uid: this.uid
 		});
 		browserHistory.push(`/create/${ref.key}`);
+	}
+	
+	onCodeDown(e: React.KeyboardEvent<HTMLTextAreaElement>) {
+		if (e.keyCode === 9 || e.which === 9) {
+			e.preventDefault();
+			const target = e.target as HTMLTextAreaElement;
+			const start = target.selectionStart;
+			target.value = target.value.substring(0, start) + '\t' + target.value.substring(target.selectionEnd);
+			target.selectionEnd = start + 1;
+		}
+	}
+	
+	async onRecord() {
+		await Promise.all([this.update({
+			recording: true,
+			start: this.now
+		}), this.set(this.replay.child('recording'), true)]);
+	}
+	
+	async onStop() {
+		await this.update({
+			recording: false,
+			done: true
+		});
 	}
 	
 	render() {
@@ -85,12 +114,17 @@ export default class Create extends Component<CreateProps, {
 							<Button>
 								<RunIcon size={styles.editorIconSize}/>
 							</Button>
-							<Button>
-								<RecordIcon size={styles.editorIconSize} color={styles.editorRecordColor}/>
-							</Button>
+							{this.state.recording ? 
+								<Button onClick={this.attach(this.onStop)}>
+									<StopIcon size={styles.editorIconSize} color={styles.editorRecordColor}/>
+								</Button> :
+								<Button disabled={this.state.done} onClick={this.attach(this.onRecord)}>
+									<RecordIcon size={styles.editorIconSize} color={styles.editorRecordColor}/>
+								</Button>
+							}
 						</div>
 						<hr/>
-						<textarea className="code" value={this.state.code || ''} onChange={this.attach(this.onCode)}/>
+						<textarea className="code" disabled={this.state.done} value={this.state.code || ''} onChange={this.attach(this.onCode)} onKeyDown={this.attach(this.onCodeDown)}/>
 					</div>
 				</Container>
 				<Container>
