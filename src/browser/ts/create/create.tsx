@@ -85,7 +85,16 @@ export default class Create extends Component<CreateProps, {
 					start: now
 				});
 			}
-			return await this.set(this.getReplayCode(this.replay, now - this.state.start), send);
+			const offset = now - this.state.start;
+			await this.set(this.getReplayCode(this.replay, offset), send);
+			// const doc = this.code.getCodeMirror().getDoc();
+			// const anchor = doc.getCursor('anchor');
+			// const head = doc.getCursor('head');
+			// await this.set(this.getReplaySelect(this.replay, offset), JSON.stringify({
+			// 	anchor,
+			// 	head
+			// }));
+			return;
 		}
 		await this.set(this.getReplayInitial(this.replay), send);
 	}
@@ -102,7 +111,13 @@ export default class Create extends Component<CreateProps, {
 				start: now
 			});
 		}
-		await this.set(this.getReplaySelect(this.replay, now - this.state.start), JSON.stringify(editor.getDoc().listSelections()));
+		const doc = editor.getDoc();
+		const anchor = doc.getCursor('anchor');
+		const head = doc.getCursor('head');
+		await this.set(this.getReplaySelect(this.replay, now - this.state.start), JSON.stringify({
+			anchor,
+			head
+		}));
 	}
 	
 	async init() {
@@ -148,7 +163,7 @@ export default class Create extends Component<CreateProps, {
 								</Link>
 							</div> :
 							<Button onClick={this.attach(this.onRecord)}>
-								<RecordIcon size={styles.editorIconSize} color={styles.editorRecordColor}/>
+								<RecordIcon size={styles.editorIconSize}/>
 							</Button>
 						}
 						<div className="clock">

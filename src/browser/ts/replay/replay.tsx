@@ -21,7 +21,7 @@ export interface CodeReplay {
 
 export interface SelectReplay {
 	time: number;
-	selections: { anchor: CodeMirror.Position; head: CodeMirror.Position }[];
+	selection: { anchor: CodeMirror.Position; head: CodeMirror.Position };
 }
 
 export default class Replay extends Component<{
@@ -66,10 +66,10 @@ export default class Replay extends Component<{
 		replay.sort((a, b) => a.time - b.time);
 		const select = [] as SelectReplay[];
 		for (const i in selects) {
-			const selections = JSON.parse(selects[i]);
+			const selection = JSON.parse(selects[i]);
 			select.push({
 				time: this.normalizedToNumber(i),
-				selections
+				selection
 			});
 		}
 		if (initial) {
@@ -119,7 +119,7 @@ export default class Replay extends Component<{
 			}).then(() => {
 				this.code.getCodeMirror().getDoc().setHistory(lastCode ? lastCode.code.history : this.state.initial.history);
 				if (lastSelect) {
-					this.code.getCodeMirror().getDoc()['setSelections'](lastSelect.selections);
+					this.code.getCodeMirror().getDoc().setSelection(lastSelect.selection.anchor, lastSelect.selection.head);
 				}
 			}), this.animationFrame()]);
 		} while (this.state.playing);
