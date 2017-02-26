@@ -9,6 +9,8 @@ import generatePushID from './lib/generatepushid';
 export type DataSnapshot = firebase.database.DataSnapshot;
 export type Reference = firebase.database.Reference;
 
+export type Socket = SocketIOClient.Socket;
+
 export type ReplayId = string | Reference;
 
 export { React, CSSProperties };
@@ -93,6 +95,10 @@ abstract class Component<P, S> extends ReactComponent<P, S> {
 	
 	formatTime(time: number) {
 		return moment().hour(0).minute(0).second(time / 1000).format('HH:mm:ss');
+	}
+	
+	getCompileLine(output: string) {
+		return `${(output || '')}>python main.py\n`;
 	}
 	
 	get recordUrl() {

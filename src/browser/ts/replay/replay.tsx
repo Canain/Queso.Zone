@@ -1,6 +1,7 @@
-import Component, { React, DataSnapshot } from '../component';
+import Component, { React, DataSnapshot, Socket } from '../component';
 import PlayIcon from 'react-icons/md/play-arrow';
 import StopIcon from 'react-icons/md/stop';
+import * as SocketIOClient from 'socket.io-client';
 
 import * as styles from '../styles';
 import Page from '../page';
@@ -49,6 +50,8 @@ export default class Replay extends Component<{
 	loaded?: boolean;
 }> {
 	
+	socket: Socket;
+	
 	code: ReactCodeMirror.ReactCodeMirror;
 	
 	componentWillMount() {
@@ -93,6 +96,13 @@ export default class Replay extends Component<{
 		if (initial) {
 			initial.history = JSON.parse(initial.history);
 		}
+		
+		this.socket = SocketIOClient(this.server);
+		this.socket.on('out', this.attach(this.onOut));
+		this.socket.on('err', this.attach(this.onErr));
+		this.socket.emit('replay', this.pushRef(this.replays).key, this.props.params.id);
+		await this.wait('replay');
+		
 		await this.update({
 			initial,
 			code: initial ? initial.code : '',
@@ -106,6 +116,31 @@ export default class Replay extends Component<{
 		if (initial) {
 			this.code.getCodeMirror().getDoc().setHistory(this.state.initial.history);
 		}
+	}
+	
+	async onOut(out: string) {
+		const now = this.now;
+		await this.update({
+			output: this.state.output + out
+		});
+	}
+	
+	async onErr(err: string) {
+		const now = this.now;
+		await this.update({
+			output: this.state.output + err
+		});
+	}
+	
+	async onCompile() {
+		this.socket.emit('compile', this.state.code);
+		await this.update({
+			output: this.getCompileLine(this.state.output)
+		});
+	}
+	
+	wait(event: string) {
+		return new Promise<void>(resolve => this.socket.once(event, resolve));
 	}
 	
 	async animate() {
@@ -197,7 +232,7 @@ export default class Replay extends Component<{
 				}
 				{!this.state.loaded ? null :
 					<Container>
-						<Editor code={this.state.code} output={this.state.output} onCodeRef={ref => this.code = ref}/>
+						<Editor code={this.state.code} output={this.state.output} onCodeRef={ref => this.code = ref} onCompile={this.attach(this.onCompile)} onCode={code => this.catchUpdate({code})}/>
 					</Container>
 				}
 			</Page>

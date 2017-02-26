@@ -1,4 +1,4 @@
-import Component, { React, Reference, DataSnapshot } from '../component';
+import Component, { React, Reference, DataSnapshot, Socket } from '../component';
 import { Link, browserHistory } from 'react-router';
 import RecordIcon from 'react-icons/md/fiber-manual-record';
 import StopIcon from 'react-icons/md/stop';
@@ -20,8 +20,6 @@ export interface RecordProps {
 		id?: string;
 	};
 }
-
-export type Socket = SocketIOClient.Socket;
 
 export default class Record extends Component<RecordProps, {
 	output?: string;
@@ -140,7 +138,7 @@ export default class Record extends Component<RecordProps, {
 	async onCompile() {
 		this.socket.emit('compile', this.state.code);
 		await this.update({
-			output: `${(this.state.output || '')}>python main.py\n`
+			output: this.getCompileLine(this.state.output)
 		});
 	}
 	
