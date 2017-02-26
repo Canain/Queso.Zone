@@ -13,12 +13,13 @@ export default class Editor extends Component<{
 	output: string;
 	onCode?: (newValue: string) => void;
 	onCodeRef?: (ref: ReactCodeMirror.ReactCodeMirror) => void;
+	onCompile?: () => void;
 }, {}> {
 	render() {
 		return (
 			<div className="box">
 				<div className="editor">
-					<Button>
+					<Button onClick={this.props.onCompile}>
 						<RunIcon size={styles.editorIconSize}/>
 					</Button>
 					{this.props.children}

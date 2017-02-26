@@ -69,6 +69,10 @@
   version "0.0.28"
   resolved "https://registry.yarnpkg.com/@types/rimraf/-/rimraf-0.0.28.tgz#5562519bc7963caca8abf7f128cae3b594d41d06"
 
+"@types/socket.io-client@^1.4.29":
+  version "1.4.29"
+  resolved "https://registry.yarnpkg.com/@types/socket.io-client/-/socket.io-client-1.4.29.tgz#f8743070cee93175e36e0b6a77a8af73e58ccb32"
+
 "@types/socket.io@^1.4.28":
   version "1.4.28"
   resolved "https://registry.yarnpkg.com/@types/socket.io/-/socket.io-1.4.28.tgz#52ff4a45ee7b58d275af13ced3947487ede07a1b"
@@ -4195,7 +4199,7 @@ socket.io-adapter@0.5.0:
     debug "2.3.3"
     socket.io-parser "2.3.1"
 
-socket.io-client@1.7.3:
+socket.io-client@1.7.3, socket.io-client@^1.7.3:
   version "1.7.3"
   resolved "https://registry.yarnpkg.com/socket.io-client/-/socket.io-client-1.7.3.tgz#b30e86aa10d5ef3546601c09cde4765e381da377"
   dependencies:

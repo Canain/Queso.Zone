@@ -37,7 +37,7 @@ export abstract class Base {
 	}
 	
 	get ws() {
-		return `${process.cwd}/ws`;
+		return `${process.cwd()}/ws`;
 	}
 	
 	writeFile(file: string, content: string) {

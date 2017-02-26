@@ -3,6 +3,7 @@ import { Link, browserHistory } from 'react-router';
 import RecordIcon from 'react-icons/md/fiber-manual-record';
 import StopIcon from 'react-icons/md/stop';
 import ViewIcon from 'react-icons/md/pageview';
+import * as SocketIOClient from 'socket.io-client';
 
 import Recorder from '../lib/recorder';
 
@@ -20,6 +21,8 @@ export interface RecordProps {
 	};
 }
 
+export type Socket = SocketIOClient.Socket;
+
 export default class Record extends Component<RecordProps, {
 	output?: string;
 	name?: string;
@@ -36,6 +39,16 @@ export default class Record extends Component<RecordProps, {
 	code: ReactCodeMirror.ReactCodeMirror;
 	
 	replay: Reference;
+	
+	socket: Socket;
+	
+	constructor() {
+		super();
+		
+		this.state = {
+			loading: true
+		};
+	}
 	
 	componentPropsChanged(nextProps: RecordProps) {
 		if (!nextProps.params.id) {
@@ -64,9 +77,6 @@ export default class Record extends Component<RecordProps, {
 			name: val.name,
 			code: val.initial ? val.initial.code : ''
 		});
-		if (val.initial) {
-			this.code.getCodeMirror().getDoc().setHistory(JSON.parse(val.initial.history));
-		}
 		const stream = await this.getUserMedia();
 		
 		const audioContext = new AudioContext();
@@ -87,11 +97,54 @@ export default class Record extends Component<RecordProps, {
 		inputPoint.connect(zeroGain);
 		zeroGain.connect(audioContext.destination);
 		
+		this.socket = SocketIOClient(this.server);
+		this.socket.on('out', this.attach(this.onOut));
+		this.socket.on('err', this.attach(this.onErr));
+		this.socket.emit('record', this.props.params.id);
+		await this.wait('record');
+		
 		await this.update({
 			recorder: audioRecorder,
 			stream,
-			enabled: true
+			enabled: true,
+			loading: false
 		});
+		if (val.initial) {
+			this.code.getCodeMirror().getDoc().setHistory(JSON.parse(val.initial.history));
+		}
+	}
+	
+	async onOut(out: string) {
+		const now = this.now;
+		await this.update({
+			output: this.state.output + out
+		});
+		if (!this.state.recording) {
+			return;
+		}
+		await this.set(this.getReplayOutput(this.replay, now - this.state.start), this.state.output);
+	}
+	
+	async onErr(err: string) {
+		const now = this.now;
+		await this.update({
+			output: this.state.output + err
+		});
+		if (!this.state.recording) {
+			return;
+		}
+		await this.set(this.getReplayOutput(this.replay, now - this.state.start), this.state.output);
+	}
+	
+	async onCompile() {
+		this.socket.emit('compile', this.state.code);
+		await this.update({
+			output: `${(this.state.output || '')}>python main.py\n`
+		});
+	}
+	
+	wait(event: string) {
+		return new Promise<void>(resolve => this.socket.once(event, resolve));
 	}
 	
 	componentWillUnmount() {
@@ -102,10 +155,10 @@ export default class Record extends Component<RecordProps, {
 		return new Promise<MediaStream>((resolve, reject) => window.navigator.getUserMedia({
 				audio: {
 					mandatory: {
-							googEchoCancellation: 'false',
-							googAutoGainControl: 'false',
-							googNoiseSuppression: 'false',
-							googHighpassFilter: 'false'
+						googEchoCancellation: 'false',
+						googAutoGainControl: 'false',
+						googNoiseSuppression: 'false',
+						googHighpassFilter: 'false'
 					},
 					optional: []
 				},
@@ -188,16 +241,13 @@ export default class Record extends Component<RecordProps, {
 		this.state.recorder.record();
 		await Promise.all([this.update({
 			recording: true,
-			start: now
+			start: now,
+			output: ''
 		}), this.set(this.getReplayRecording(this.replay), true)]);
 		this.code.focus();
 		await this.update({
 			enabled: true
 		});
-	}
-	
-	getBuffers() {
-		return new Promise<any>(resolve => this.state.recorder.getBuffers(resolve));
 	}
 	
 	exportWAV() {
@@ -273,7 +323,7 @@ export default class Record extends Component<RecordProps, {
 				}
 				{this.state.loading ? null :
 					<Container>
-						<Editor disabled={!!this.state.done} code={this.state.code || ''} onCode={this.attach(this.onCode)} output={this.state.output} onCodeRef={ref => {
+						<Editor disabled={!!this.state.done} code={this.state.code || ''} onCode={this.attach(this.onCode)} output={this.state.output} onCompile={this.attach(this.onCompile)} onCodeRef={ref => {
 							this.code = ref;
 							if (this.code) {
 								this.code.getCodeMirror().off('cursorActivity', this.onCursorAttached);

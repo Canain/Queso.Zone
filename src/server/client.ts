@@ -24,6 +24,7 @@ export default class Client extends Base {
 	record(id: string) {
 		this.id = id;
 		this.mkdirp(this.dir);
+		this.socket.emit('record');
 	}
 	
 	replay(id: string) {

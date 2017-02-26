@@ -39,6 +39,10 @@ abstract class Component<P, S> extends ReactComponent<P, S> {
 		return compressor.decompress(compressed);
 	}
 	
+	get server() {
+		return process.env.NODE_ENV === 'production' ? '' : 'http://localhost:8090';
+	}
+	
 	get replays() {
 		return this.ref('replays');
 	}
@@ -65,6 +69,10 @@ abstract class Component<P, S> extends ReactComponent<P, S> {
 	
 	getReplaySelect(id: ReplayId, offset: number) {
 		return this.getReplay(id).child('select').child(this.normalizeNumber(offset));
+	}
+	
+	getReplayOutput(id: ReplayId, offset: number) {
+		return this.getReplay(id).child('output').child(this.normalizeNumber(offset));
 	}
 	
 	getReplayAudio(id: ReplayId) {

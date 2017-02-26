@@ -23,6 +23,7 @@ class Server extends Base {
 		this.io.on('connection', socket => new Client(socket));
 		
 		this.io.listen(this.port);
+		console.log(`Listening on socket port ${this.port}`);
 	}
 }
 
