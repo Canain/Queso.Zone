@@ -4,7 +4,7 @@ import * as shallowequal from 'shallowequal';
 import * as firebase from 'firebase';
 import * as moment from 'moment';
 
-import generatePushID from './generatepushid';
+import generatePushID from './lib/generatepushid';
 
 export type DataSnapshot = firebase.database.DataSnapshot;
 export type Reference = firebase.database.Reference;

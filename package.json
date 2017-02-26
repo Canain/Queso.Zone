@@ -82,6 +82,7 @@
     "style-loader": "^0.13.2",
     "typescript": "^2.2.1",
     "watch": "^1.0.2",
-    "webpack": "^2.2.1"
+    "webpack": "^2.2.1",
+    "worker-loader": "^0.8.0"
   }
 }
