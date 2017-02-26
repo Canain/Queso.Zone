@@ -139,3 +139,4 @@ $RECYCLE.BIN/
 /dist
 /public/*.html
 /public/bundle.js
+*.worker.js
