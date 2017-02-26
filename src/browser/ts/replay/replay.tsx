@@ -38,6 +38,7 @@ export default class Replay extends Component<{
 	playing?: boolean;
 	started?: number;
 	time?: number;
+	audio?: string;
 }> {
 	
 	code: ReactCodeMirror.ReactCodeMirror;
@@ -51,7 +52,7 @@ export default class Replay extends Component<{
 	
 	async init() {
 		const data = await this.getReplay(this.props.params.id).once('value') as DataSnapshot;
-		const { initial, code, select: selects, name } = data.val();
+		const { initial, code, select: selects, name, audio } = data.val();
 		const replay = [] as CodeReplay[];
 		for (const i in code) {
 			const c = code[i];
@@ -81,7 +82,8 @@ export default class Replay extends Component<{
 			code: initial ? initial.code : '',
 			name,
 			replay,
-			select
+			select,
+			audio: await this.decompress(audio as string)
 		});
 		if (initial) {
 			this.code.getCodeMirror().getDoc().setHistory(this.state.initial.history);
@@ -131,6 +133,8 @@ export default class Replay extends Component<{
 			playing: true,
 			started: this.now
 		});
+		const audio = new Audio(this.state.audio);
+		audio.play();
 		await this.animate();
 	}
 	
