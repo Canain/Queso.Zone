@@ -10,7 +10,7 @@ Queso.Zone is a web platform for recording and sharing code tutorials using reco
 * Responsive and Clean Design
 * Currently only Node.js/JavaScript is supported, but more languages can be supported
 
-## USAGE
+## Usage
 * Go to [https://queso.zone](https://queso.zone)
 * Click Login on the top right to login with GitHub
 	* Authorize the app
@@ -33,7 +33,7 @@ Queso.Zone is a web platform for recording and sharing code tutorials using reco
 	* Press the Stop icon to stop the replay
 	* While the replay is stopped, you can freely edit the code and build it as you like
 
-## BUILD/INSTALLATION INSTRUCTIONS
+## Build Instructions
 * Install [Node.js](https://nodejs.org)
 * Install [Yarn](https://yarnpkg.com/en/docs/install)
 * Clone this repository to a local directory
