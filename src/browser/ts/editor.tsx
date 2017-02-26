@@ -1,5 +1,6 @@
 import Component, { React } from './component';
 import RunIcon from 'react-icons/md/build';
+import RefreshIcon from 'react-icons/md/cached';
 import * as CodeMirror from 'react-codemirror';
 import 'codemirror/mode/javascript/javascript';
 
@@ -19,6 +20,17 @@ export default class Editor extends Component<{
 	render() {
 		return (
 			<div className="box">
+				<div className="editor">
+					<div className="install">
+						<h4>npm install</h4>
+					</div>
+					<div className="vr"/>
+					<input className="dependencies"/>
+					<Button>
+						<RefreshIcon size={styles.editorIconSize}/>
+					</Button>
+				</div>
+				<hr/>
 				<div className="editor">
 					<Button onClick={this.props.onCompile}>
 						<RunIcon size={styles.editorIconSize}/>

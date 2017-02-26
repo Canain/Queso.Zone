@@ -13,6 +13,8 @@ $editorFontSize: 18px;
 $surround: 24px;
 $verticalSpacing: 24px;
 
+$code: Consolas, Monaco, Courier New, Courier, monospace;
+
 $zDepth2: rgba(0, 0, 0, 0.156863) 0px 3px 10px, rgba(0, 0, 0, 0.227451) 0px 3px 10px;
 
 body {
@@ -124,6 +126,53 @@ hr {
 	display: flex;
 	flex-direction: row;
 	
+	input.dependencies {
+		flex: 1;
+		
+		height: $editor;
+		font-size: 14px;
+		font-family: $code;
+		color: $dark;
+		padding: 0 16px;
+		
+		border-bottom: none;
+		
+		&:focus {
+			border-bottom: none;
+		}
+	}
+	
+	.install {
+		display: flex;
+		flex-direction: row;
+		flex-wrap: nowrap;
+		justify-content: center;
+		align-items: center;
+		align-content: stretch;
+		width: calc($editor * 3);
+		&:hover {
+			background-color: transparent;
+		}
+	}
+	
+	.vr {
+		width: 1px;
+		
+		background-color: $grey;
+		
+		&:hover {
+			background-color: $grey;
+		}
+	}
+	
+	h4 {
+		font-weight: normal;
+		color: $darkish;
+		font-family: $code;
+		margin: 0;
+		font-size: 14px;
+	}
+	
 	> div {
 		height: $editor;
 		width: $editor;
@@ -173,6 +222,7 @@ hr {
 
 .CodeMirror {
 	font-size: $editorFontSize;
+	font-family: $code;
 }
 
 .code {
