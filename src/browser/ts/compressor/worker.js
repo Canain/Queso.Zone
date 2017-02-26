@@ -12,7 +12,12 @@ onmessage = function (e) {
 function compress(data) {
 	var zip = new JSZip();
 	zip.file('a', data.in);
-	zip.generateAsync({type: 'string'}).then(function (out) {
+	zip.generateAsync({
+		type: 'string',
+		compressionOptions: {
+			level: 9
+		}
+	}).then(function (out) {
 		postMessage({
 			id: data.id,
 			out: out
