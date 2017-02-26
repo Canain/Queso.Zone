@@ -34,6 +34,7 @@ Queso.Zone is a web platform for recording and sharing code tutorials using reco
 * To use the replay page, press the Play icon to start the replay
 	* Press the Stop icon to stop the replay
 	* While the replay is stopped, you can freely edit the code and build it as you like
+	* Anyone with the URL of the replay can see the replay
 
 ## Build Instructions
 * Install [Node.js](https://nodejs.org)
