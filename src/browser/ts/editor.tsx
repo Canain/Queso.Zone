@@ -31,7 +31,7 @@ export default class Editor extends Component<{
 					<div className="install">
 						<h4>npm install</h4>
 					</div>
-					<input className="dependencies" disabled={this.props.disabled} onChange={e => this.props.onDependencies ? this.props.onDependencies(e.target.value) : null} value={this.props.dependencies || ''}/>
+					<input className="dependencies" disabled={this.props.disabled || !this.props.onInstall} onChange={e => this.props.onDependencies ? this.props.onDependencies(e.target.value) : null} value={this.props.dependencies || ''}/>
 					{!this.props.onInstall ? null :
 						<Button onClick={this.props.onInstall}>
 							<RefreshIcon size={styles.editorIconSize}/>
