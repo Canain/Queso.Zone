@@ -22,8 +22,9 @@ if (process.env.NODE_ENV !== 'production') {
 
 const observer = firebase.auth().onAuthStateChanged(() => {
 	observer();
-	const div = window.document.createElement('div');
-	window.document.body.appendChild(div);
+	const div = window.document.getElementById('preload');
+	div.id = null;
+	div.className = null;
 	ReactDOM.render(<Routes/>, div);
 })
 
