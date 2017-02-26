@@ -1,4 +1,3 @@
-import * as lzmajs from 'lzma-purejs';
 const CompressorWorker = require('worker-loader?inline!./worker.js');
 
 export default class Compressor {
