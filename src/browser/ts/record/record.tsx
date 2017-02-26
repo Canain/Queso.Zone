@@ -32,7 +32,7 @@ export default class Record extends Component<RecordProps, {
 	
 	componentPropsChanged(nextProps: RecordProps) {
 		if (!nextProps.params.id) {
-			return this.init().catch(this.catch);
+			return this.generate().catch(this.catch);
 		}
 		this.replay = this.getReplay(nextProps.params.id);
 		this.updateInitial().then(() => this.update()).catch(this.catch);
@@ -43,7 +43,7 @@ export default class Record extends Component<RecordProps, {
 			return browserHistory.push('/');
 		}
 		if (!this.props.params.id) {
-			return this.init().catch(this.catch);
+			return this.generate().catch(this.catch);
 		}
 		this.replay = this.getReplay(this.props.params.id);
 		this.updateInitial().catch(this.catch);
@@ -120,7 +120,7 @@ export default class Record extends Component<RecordProps, {
 		await this.set(this.getReplaySelect(this.replay, now - this.state.start), JSON.stringify(send));
 	}
 	
-	async init() {
+	async generate() {
 		browserHistory.push(this.getRecordUrl(this.pushRef(this.replays).key));
 	}
 	
