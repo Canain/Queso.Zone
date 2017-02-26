@@ -27,10 +27,11 @@ export default class Client extends Base {
 		this.socket.emit('record');
 	}
 	
-	replay(id: string) {
+	replay(id: string, replay: string) {
 		this.id = id;
 		this.cleanup = true;
-		this.mkdirp(this.dir);
+		this.cp(`${this.ws}/${replay}`, this.dir);
+		this.socket.emit('replay');
 	}
 	
 	async compile(code: string) {

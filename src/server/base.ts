@@ -2,6 +2,7 @@ import * as mkdirp from 'mkdirp';
 import * as childProcess from 'child_process';
 import * as fs from 'fs';
 import * as rimraf from 'rimraf';
+import { ncp } from 'ncp';
 
 export abstract class Base {
 	
@@ -46,6 +47,10 @@ export abstract class Base {
 	
 	rm(path: string) {
 		return new Promise<void>((resolve, reject) => rimraf(path, e => e ? reject(e) : resolve()));
+	}
+	
+	cp(src: string, dst: string) {
+		return new Promise<void>((resolve, reject) => ncp(src, dst, e => e? reject(e) : resolve()))
 	}
 }
 
