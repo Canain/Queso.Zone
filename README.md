@@ -2,6 +2,7 @@
 Queso.Zone is a web platform for recording and sharing code tutorials using recorded audio and a code replay system.
 * Open Source
 * Hosted by Firebase
+* Written in TypeScript using React and Node.js
 * Login with GitHub
 * Record and Playback Audio
 * Record and Playback Cursor by Cursor Key by Key Code Editing
