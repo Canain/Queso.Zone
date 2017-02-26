@@ -93,12 +93,20 @@ abstract class Component<P, S> extends ReactComponent<P, S> {
 		return this.getReplay(id).child('recording');
 	}
 	
+	getReplayDependencies(id: ReplayId) {
+		return this.getReplay(id).child('dependencies');
+	}
+	
 	formatTime(time: number) {
 		return moment().hour(0).minute(0).second(time / 1000).format('HH:mm:ss');
 	}
 	
 	getCompileLine(output: string) {
 		return `${(output || '')}>node main.js\n`;
+	}
+	
+	getInstallLine(output: string, dependencies: string) {
+		return `${(output || '')}>npm install ${dependencies}\n`;
 	}
 	
 	get recordUrl() {

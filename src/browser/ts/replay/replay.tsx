@@ -48,6 +48,7 @@ export default class Replay extends Component<{
 	time?: number;
 	audio?: HTMLAudioElement;
 	loaded?: boolean;
+	dependencies?: string;
 }> {
 	
 	socket: Socket;
@@ -63,7 +64,7 @@ export default class Replay extends Component<{
 	
 	async init() {
 		const data = await this.getReplay(this.props.params.id).once('value') as DataSnapshot;
-		const { initial, code, select: selects, name, audio, output } = data.val();
+		const { initial, code, select: selects, name, audio, output, dependencies } = data.val();
 		const replay = [] as CodeReplay[];
 		for (const i in code) {
 			const c = code[i];
@@ -110,6 +111,7 @@ export default class Replay extends Component<{
 			replay,
 			select,
 			out,
+			dependencies,
 			audio: new Audio(await this.decompress(audio as string)),
 			loaded: true
 		});
@@ -232,7 +234,7 @@ export default class Replay extends Component<{
 				}
 				{!this.state.loaded ? null :
 					<Container>
-						<Editor code={this.state.code} output={this.state.output} onCodeRef={ref => this.code = ref} onCompile={this.attach(this.onCompile)} onCode={code => this.catchUpdate({code})}/>
+						<Editor code={this.state.code} output={this.state.output} onCodeRef={ref => this.code = ref} onCompile={this.attach(this.onCompile)} onCode={code => this.catchUpdate({code})} dependencies={this.state.dependencies}/>
 					</Container>
 				}
 			</Page>

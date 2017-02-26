@@ -14,6 +14,7 @@ export default class Client extends Base {
 		this.socket.on('record', this.attach(this.record));
 		this.socket.on('replay', this.attach(this.replay));
 		this.socket.on('compile', this.attach(this.compile));
+		this.socket.on('install', this.attach(this.install));
 		this.socket.on('disconnect', this.attach(this.disconnect));
 	}
 	
@@ -37,6 +38,10 @@ export default class Client extends Base {
 	async compile(code: string) {
 		await this.writeFile(`${this.dir}/main.js`, code);
 		await this.spawn('node', ['main.js'], this.dir, out => this.socket.emit('out', out), err => this.socket.emit('err', err));
+	}
+	
+	async install(dependencies: string) {
+		await this.spawn('npm', ['install'].concat(dependencies.split(' ')), this.dir, out => this.socket.emit('out', out), err => this.socket.emit('err', err));
 	}
 	
 	disconnect() {

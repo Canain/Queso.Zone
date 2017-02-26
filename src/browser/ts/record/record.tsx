@@ -32,6 +32,7 @@ export default class Record extends Component<RecordProps, {
 	enabled?: boolean;
 	stream?: MediaStream;
 	loading?: boolean;
+	dependencies?: string;
 }> {
 	
 	code: ReactCodeMirror.ReactCodeMirror;
@@ -74,7 +75,8 @@ export default class Record extends Component<RecordProps, {
 		await this.update({
 			done: val.recording,
 			name: val.name,
-			code: val.initial ? val.initial.code : ''
+			code: val.initial ? val.initial.code : '',
+			dependencies: val.dependencies
 		});
 		const stream = await this.getUserMedia();
 		
@@ -136,10 +138,27 @@ export default class Record extends Component<RecordProps, {
 	}
 	
 	async onCompile() {
+		const now = this.now;
 		this.socket.emit('compile', this.state.code);
 		await this.update({
 			output: this.getCompileLine(this.state.output)
 		});
+		if (!this.state.recording) {
+			return;
+		}
+		await this.set(this.getReplayOutput(this.replay, now - this.state.start), this.state.output);
+	}
+	
+	async onInstall() {
+		const now = this.now;
+		this.socket.emit('install', this.state.dependencies);
+		await this.update({
+			output: this.getInstallLine(this.state.output, this.state.dependencies)
+		});
+		if (!this.state.recording) {
+			return;
+		}
+		await this.set(this.getReplayOutput(this.replay, now - this.state.start), this.state.output);
 	}
 	
 	wait(event: string) {
@@ -170,6 +189,13 @@ export default class Record extends Component<RecordProps, {
 			name
 		});
 		await this.set(this.getReplayName(this.replay), name);
+	}
+	
+	async onDependencies(dependencies: string) {
+		await this.update({
+			dependencies
+		});
+		await this.set(this.getReplayDependencies(this.replay), this.state.dependencies);
 	}
 	
 	async onCode(code: string) {
@@ -328,7 +354,7 @@ export default class Record extends Component<RecordProps, {
 								this.code.getCodeMirror().off('cursorActivity', this.onCursorAttached);
 								this.code.getCodeMirror().on('cursorActivity', this.onCursorAttached);
 							}
-						}} onOutputRef={ref => this.output = ref}/>
+						}} onOutputRef={ref => this.output = ref} dependencies={this.state.dependencies} onDependencies={this.attach(this.onDependencies)} onInstall={this.attach(this.onInstall)}/>
 					</Container>
 				}
 			</Page>

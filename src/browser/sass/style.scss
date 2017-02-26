@@ -133,7 +133,7 @@ hr {
 		font-size: 14px;
 		font-family: $code;
 		color: $dark;
-		padding: 0 16px;
+		padding: 0;
 		
 		border-bottom: none;
 		
@@ -149,7 +149,7 @@ hr {
 		justify-content: center;
 		align-items: center;
 		align-content: stretch;
-		width: calc($editor * 3);
+		width: 128px;
 		&:hover {
 			background-color: transparent;
 		}
