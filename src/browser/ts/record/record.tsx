@@ -24,6 +24,7 @@ export default class Record extends Component<RecordProps, {
 	recording?: boolean;
 	done?: number;
 	start?: number;
+	ready?: boolean;
 }> {
 	
 	code: ReactCodeMirror.ReactCodeMirror;
@@ -35,7 +36,7 @@ export default class Record extends Component<RecordProps, {
 			return this.generate().catch(this.catch);
 		}
 		this.replay = this.getReplay(nextProps.params.id);
-		this.updateInitial().then(() => this.update()).catch(this.catch);
+		this.init().then(() => this.update()).catch(this.catch);
 	}
 	
 	componentWillMount() {
@@ -46,10 +47,10 @@ export default class Record extends Component<RecordProps, {
 			return this.generate().catch(this.catch);
 		}
 		this.replay = this.getReplay(this.props.params.id);
-		this.updateInitial().catch(this.catch);
+		this.init().catch(this.catch);
 	}
 	
-	async updateInitial() {
+	async init() {
 		const data = await this.replay.once('value') as DataSnapshot;
 		const val = data.val() || {};
 		await this.update({
