@@ -14,6 +14,7 @@ export default class Editor extends Component<{
 	onCode?: (newValue: string) => void;
 	onCodeRef?: (ref: ReactCodeMirror.ReactCodeMirror) => void;
 	onCompile?: () => void;
+	onOutputRef?: (ref: ReactCodeMirror.ReactCodeMirror) => void;
 }, {}> {
 	render() {
 		return (
@@ -33,9 +34,10 @@ export default class Editor extends Component<{
 				}}/>
 				<hr/>
 				<CodeMirror className="output" value={`Output:\n${this.props.output || ''}`} options={{
+					mode: 'none',
 					readOnly: true,
 					lineNumbers: true
-				}}/>
+				}} ref={this.props.onOutputRef}/>
 			</div>
 		);
 	}

@@ -37,6 +37,7 @@ export default class Record extends Component<RecordProps, {
 }> {
 	
 	code: ReactCodeMirror.ReactCodeMirror;
+	output: ReactCodeMirror.ReactCodeMirror;
 	
 	replay: Reference;
 	
@@ -329,7 +330,7 @@ export default class Record extends Component<RecordProps, {
 								this.code.getCodeMirror().off('cursorActivity', this.onCursorAttached);
 								this.code.getCodeMirror().on('cursorActivity', this.onCursorAttached);
 							}
-						}}/>
+						}} onOutputRef={ref => this.output = ref}/>
 					</Container>
 				}
 			</Page>
