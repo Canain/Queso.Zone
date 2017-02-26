@@ -98,7 +98,7 @@ abstract class Component<P, S> extends ReactComponent<P, S> {
 	}
 	
 	getCompileLine(output: string) {
-		return `${(output || '')}>python main.py\n`;
+		return `${(output || '')}>node main.js\n`;
 	}
 	
 	get recordUrl() {

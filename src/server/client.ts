@@ -35,8 +35,8 @@ export default class Client extends Base {
 	}
 	
 	async compile(code: string) {
-		await this.writeFile(`${this.dir}/main.py`, code);
-		await this.spawn('python', ['main.py'], this.dir, out => this.socket.emit('out', out), err => this.socket.emit('err', err));
+		await this.writeFile(`${this.dir}/main.js`, code);
+		await this.spawn('node', ['main.js'], this.dir, out => this.socket.emit('out', out), err => this.socket.emit('err', err));
 	}
 	
 	disconnect() {

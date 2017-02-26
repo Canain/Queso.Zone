@@ -1,7 +1,7 @@
 import Component, { React } from './component';
 import RunIcon from 'react-icons/md/build';
 import * as CodeMirror from 'react-codemirror';
-import 'codemirror/mode/python/python';
+import 'codemirror/mode/javascript/javascript';
 
 import * as styles from './styles';
 import Container from './container';
@@ -27,7 +27,7 @@ export default class Editor extends Component<{
 				</div>
 				<hr/>
 				<CodeMirror className="code" value={this.props.code} onChange={this.props.onCode} ref={this.props.onCodeRef} options={{
-					mode: 'python',
+					mode: 'javascript',
 					lineWrapping: true,
 					readOnly: this.props.disabled,
 					lineNumbers: true
