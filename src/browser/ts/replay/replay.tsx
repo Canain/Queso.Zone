@@ -38,7 +38,7 @@ export default class Replay extends Component<{
 	playing?: boolean;
 	started?: number;
 	time?: number;
-	audio?: string;
+	audio?: HTMLAudioElement;
 }> {
 	
 	code: ReactCodeMirror.ReactCodeMirror;
@@ -83,7 +83,7 @@ export default class Replay extends Component<{
 			name,
 			replay,
 			select,
-			audio: await this.decompress(audio as string)
+			audio: new Audio(await this.decompress(audio as string))
 		});
 		if (initial) {
 			this.code.getCodeMirror().getDoc().setHistory(this.state.initial.history);
@@ -98,17 +98,15 @@ export default class Replay extends Component<{
 			this.code.focus();
 			let lastCode = null as CodeReplay;
 			const now = this.now - this.state.started;
-			let i;
-			for (i = 0; i < this.state.replay.length; i++) {
+			for (let i = 0; i < this.state.replay.length; i++) {
 				const replay = this.state.replay[i];
 				if (replay.time > now) {
 					break;
 				}
 				lastCode = replay;
 			}
-			let j;
 			let lastSelect = null as SelectReplay;
-			for (j = 0; j < this.state.select.length; j++) {
+			for (let j = 0; j < this.state.select.length; j++) {
 				const select = this.state.select[j];
 				if (select.time > now) {
 					break;
@@ -117,7 +115,7 @@ export default class Replay extends Component<{
 			}
 			await Promise.all([this.update({
 				code: lastCode ? lastCode.code.code : this.state.initial.code,
-				playing: i !== this.state.replay.length || j !== this.state.select.length,
+				playing: !this.state.audio.paused,
 				time: now
 			}).then(() => {
 				this.code.getCodeMirror().getDoc().setHistory(lastCode ? lastCode.code.history : this.state.initial.history);
@@ -133,12 +131,13 @@ export default class Replay extends Component<{
 			playing: true,
 			started: this.now
 		});
-		const audio = new Audio(this.state.audio);
-		audio.play();
+		this.state.audio.currentTime = 0;
+		this.state.audio.play();
 		await this.animate();
 	}
 	
 	async onStop() {
+		this.state.audio.pause();
 		await this.update({
 			playing: false
 		});
