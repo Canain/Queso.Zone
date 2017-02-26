@@ -17,7 +17,7 @@ export default class Page extends Component<{
 	}
 	
 	updateDocument() {
-		window.document.title = `Queso${this.props.title ? ` | ${this.props.title}` : ''}`;
+		window.document.title = `Queso.Zone${this.props.title ? ` | ${this.props.title}` : ''}`;
 		window.document.body.className = this.props.className || '';
 	}
 	

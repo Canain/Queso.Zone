@@ -54,7 +54,7 @@ export default class Toolbar extends Component<{}, {
 			<div className="toolbar">
 				<Container>
 					<div>
-						<Link to="/"><h1>Queso</h1></Link>
+						<Link to="/"><h1>Queso.Zone</h1></Link>
 					</div>
 					<div>
 						{!this.state.loggedIn ? null :
