@@ -19,11 +19,11 @@ DEALINGS IN THE SOFTWARE.
 Modified by Shuyang Chen 2017
 */
 
-const RecorderWorker = require('worker-loader!./recorderWorker');
+const RecorderWorker = require('worker-loader?inline!./recorderWorker.js');
 
 export const Recorder = (function(window){
 
-  var Recorder = function(source, cfg){
+  var Recorder = function(source, cfg?) {
     var config = cfg || {};
     var bufferLen = config.bufferLen || 4096;
     this.context = source.context;

@@ -4,6 +4,8 @@ import RecordIcon from 'react-icons/md/fiber-manual-record';
 import StopIcon from 'react-icons/md/stop';
 import ViewIcon from 'react-icons/md/pageview';
 
+import Recorder from '../lib/recorder';
+
 import * as styles from '../styles';
 import Page from '../page';
 import Container from '../container';
@@ -24,7 +26,8 @@ export default class Record extends Component<RecordProps, {
 	recording?: boolean;
 	done?: number;
 	start?: number;
-	ready?: boolean;
+	recorder?;
+	enabled?: boolean;
 }> {
 	
 	code: ReactCodeMirror.ReactCodeMirror;
@@ -61,6 +64,44 @@ export default class Record extends Component<RecordProps, {
 		if (val.initial) {
 			this.code.getCodeMirror().getDoc().setHistory(JSON.parse(val.initial.history));
 		}
+		const stream = await this.getUserMedia();
+		
+		const audioContext = new AudioContext();
+		const inputPoint = audioContext.createGain();
+		
+		const realAudioInput = audioContext.createMediaStreamSource(stream);
+		const audioInput = realAudioInput;
+		audioInput.connect(inputPoint);
+		
+		const analyzerNode = audioContext.createAnalyser();
+		analyzerNode.fftSize = 2048;
+		inputPoint.connect(analyzerNode);
+		
+		const audioRecorder = new Recorder(inputPoint);
+		
+		const zeroGain = audioContext.createGain();
+		zeroGain.gain.value = 0;
+		inputPoint.connect(zeroGain);
+		zeroGain.connect(audioContext.destination);
+		
+		await this.update({
+			recorder: audioRecorder,
+			enabled: true
+		});
+	}
+	
+	getUserMedia() {
+		return new Promise<MediaStream>((resolve, reject) => window.navigator.getUserMedia({
+				audio: {
+					mandatory: {
+							googEchoCancellation: 'false',
+							googAutoGainControl: 'false',
+							googNoiseSuppression: 'false',
+							googHighpassFilter: 'false'
+					},
+					optional: []
+				},
+			} as any, resolve, reject));
 	}
 	
 	async onName(e: React.ChangeEvent<HTMLInputElement>) {
@@ -126,22 +167,57 @@ export default class Record extends Component<RecordProps, {
 	}
 	
 	async onRecord() {
+		await this.update({
+			enabled: false
+		});
 		await this.set(this.getReplayUid(this.replay), this.uid);
 		await this.set(this.getReplayInitial(this.replay), {
 			code: this.state.code || '',
 			history: JSON.stringify(this.code.getCodeMirror().getDoc().getHistory())
 		})
+		const now = this.now;
+		this.state.recorder.clear();
+		this.state.recorder.record();
 		await Promise.all([this.update({
 			recording: true,
-			start: null
+			start: now
 		}), this.set(this.getReplayRecording(this.replay), true)]);
 		this.code.focus();
+		await this.update({
+			enabled: true
+		});
+	}
+	
+	getBuffers() {
+		return new Promise<any>(resolve => this.state.recorder.getBuffers(resolve));
+	}
+	
+	exportWAV() {
+		return new Promise<Blob>(resolve => this.state.recorder.exportWAV(resolve));
+	}
+	
+	blobToBase64(blob: Blob) {
+		return new Promise<string>(resolve => {
+			const reader = new FileReader();
+			reader.onloadend = () => resolve(reader.result);
+			reader.readAsDataURL(blob);
+		});
 	}
 	
 	async onStop() {
 		await this.update({
+			enabled: false
+		});
+		const now = this.now;
+		this.state.recorder.stop();
+		const blob = await this.exportWAV();
+		
+		const audio = await this.blobToBase64(blob);
+		console.log(audio);
+		
+		await this.update({
 			recording: false,
-			done: this.now - this.state.start
+			done: now - this.state.start
 		});
 		browserHistory.push(this.getReplayUrl(this.props.params.id));
 	}
@@ -155,7 +231,7 @@ export default class Record extends Component<RecordProps, {
 				<Container>
 					<div className="editor box">
 						{this.state.recording ? 
-							<Button onClick={this.attach(this.onStop)}>
+							<Button disabled={!this.state.enabled} onClick={this.attach(this.onStop)}>
 								<StopIcon size={styles.editorIconSize} color={styles.editorRecordColor}/>
 							</Button> :
 							this.state.done ? 
@@ -164,7 +240,7 @@ export default class Record extends Component<RecordProps, {
 									<ViewIcon size={styles.editorIconSize}/>
 								</Link>
 							</div> :
-							<Button onClick={this.attach(this.onRecord)}>
+							<Button disabled={!this.state.recorder || !this.state.enabled} onClick={this.attach(this.onRecord)}>
 								<RecordIcon size={styles.editorIconSize}/>
 							</Button>
 						}
@@ -174,7 +250,7 @@ export default class Record extends Component<RecordProps, {
 									<span>{this.formatTime(this.state.done)}</span> :
 									<RelativeTime start={this.state.start}/>
 								 ) :
-								 <span>00:00:00</span>
+								 <span>{this.formatTime(0)}</span>
 							}
 						</div>
 					</div>

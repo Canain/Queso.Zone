@@ -22,7 +22,7 @@ var recLength = 0,
   recBuffersR = [],
   sampleRate;
 
-this.onmessage = function(e){
+onmessage = function(e){
   switch(e.data.command){
     case 'init':
       init(e.data.config);
@@ -124,7 +124,7 @@ function writeString(view, offset, string){
   }
 }
 
-function encodeWAV(samples, mono?){
+function encodeWAV(samples, mono){
   var buffer = new ArrayBuffer(44 + samples.length * 2);
   var view = new DataView(buffer);
 
