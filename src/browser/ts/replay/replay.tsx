@@ -25,6 +25,11 @@ export interface SelectReplay {
 	selection: { anchor: CodeMirror.Position; head: CodeMirror.Position };
 }
 
+export interface OutputReplay {
+	time: number;
+	output: string;
+}
+
 export default class Replay extends Component<{
 	params: {
 		id?: string;
@@ -35,6 +40,7 @@ export default class Replay extends Component<{
 	name?: string;
 	replay?: CodeReplay[];
 	select?: SelectReplay[];
+	out?: OutputReplay[];
 	output?: string;
 	playing?: boolean;
 	started?: number;
@@ -54,7 +60,7 @@ export default class Replay extends Component<{
 	
 	async init() {
 		const data = await this.getReplay(this.props.params.id).once('value') as DataSnapshot;
-		const { initial, code, select: selects, name, audio } = data.val();
+		const { initial, code, select: selects, name, audio, output } = data.val();
 		const replay = [] as CodeReplay[];
 		for (const i in code) {
 			const c = code[i];
@@ -76,6 +82,14 @@ export default class Replay extends Component<{
 			});
 		}
 		select.sort((a, b) => a.time - b.time);
+		const out = [] as OutputReplay[];
+		for (const i in output) {
+			out.push({
+				time: this.normalizedToNumber(i),
+				output: output[i]
+			});
+		}
+		out.sort((a, b) => a.time - b.time);
 		if (initial) {
 			initial.history = JSON.parse(initial.history);
 		}
@@ -85,6 +99,7 @@ export default class Replay extends Component<{
 			name,
 			replay,
 			select,
+			out,
 			audio: new Audio(await this.decompress(audio as string)),
 			loaded: true
 		});
@@ -116,8 +131,17 @@ export default class Replay extends Component<{
 				}
 				lastSelect = select;
 			}
+			let lastOut = null as OutputReplay;
+			for (let k = 0; k < this.state.out.length; k++) {
+				const out = this.state.out[k];
+				if (out.time > now) {
+					break;
+				}
+				lastOut = out;
+			}
 			await Promise.all([this.update({
 				code: lastCode ? lastCode.code.code : this.state.initial.code,
+				output: lastOut ? lastOut.output : '',
 				playing: !this.state.audio.paused,
 				time: now
 			}).then(() => {
