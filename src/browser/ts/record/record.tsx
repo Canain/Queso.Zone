@@ -28,6 +28,7 @@ export default class Record extends Component<RecordProps, {
 	start?: number;
 	recorder?;
 	enabled?: boolean;
+	stream?: MediaStream;
 }> {
 	
 	code: ReactCodeMirror.ReactCodeMirror;
@@ -86,8 +87,13 @@ export default class Record extends Component<RecordProps, {
 		
 		await this.update({
 			recorder: audioRecorder,
+			stream,
 			enabled: true
 		});
+	}
+	
+	componentWillUnmount() {
+		this.state.stream.getAudioTracks()[0].stop();
 	}
 	
 	getUserMedia() {
