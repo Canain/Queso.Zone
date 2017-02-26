@@ -6,6 +6,12 @@
   version "0.0.38"
   resolved "https://registry.yarnpkg.com/@types/codemirror/-/codemirror-0.0.38.tgz#d07ad45baca499f37151455857ad08804274091e"
 
+"@types/dotenv@^2.0.20":
+  version "2.0.20"
+  resolved "https://registry.yarnpkg.com/@types/dotenv/-/dotenv-2.0.20.tgz#79ca51c9594cc889cc8a72427ea8db4ddfd32929"
+  dependencies:
+    "@types/node" "*"
+
 "@types/history@^3":
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/@types/history/-/history-3.2.0.tgz#b9afac537ef30c4ca3aa1a6bea08c039011073d4"
@@ -58,6 +64,10 @@
 "@types/react@*", "@types/react@^15.0.12":
   version "15.0.12"
   resolved "https://registry.yarnpkg.com/@types/react/-/react-15.0.12.tgz#aea95e45631bd745be45d65c2dc02327848212f2"
+
+"@types/rimraf@^0.0.28":
+  version "0.0.28"
+  resolved "https://registry.yarnpkg.com/@types/rimraf/-/rimraf-0.0.28.tgz#5562519bc7963caca8abf7f128cae3b594d41d06"
 
 "@types/socket.io@^1.4.28":
   version "1.4.28"
@@ -4060,7 +4070,7 @@ right-align@^0.1.1:
   dependencies:
     align-text "^0.1.1"
 
-rimraf@2, rimraf@^2.2.8:
+rimraf@2, rimraf@^2.2.8, rimraf@^2.6.1:
   version "2.6.1"
   resolved "https://registry.yarnpkg.com/rimraf/-/rimraf-2.6.1.tgz#c2338ec643df7a1b7fe5c54fa86f57428a55f33d"
   dependencies:

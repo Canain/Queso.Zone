@@ -1,31 +1,28 @@
 import * as sourceMapSupport from 'source-map-support';
 sourceMapSupport.install();
 
-import * as mkdirp from 'mkdirp';
-import * as fs from 'fs';
-import * as childProcess from 'child_process';
+import * as SocketIO from 'socket.io';
+import * as dotenv from 'dotenv';
 
 import * as constants from '../common/constants';
+import Base from './base';
+import Client from './client';
 
-class Server {
+dotenv.config({
+	silent: true
+});
+
+class Server extends Base {
+	
+	io = SocketIO();
+	port = parseInt(process.env.PORT || '8090')
 	
 	async run() {
-		await this.mkdirp(`${process.cwd()}/ws`);
+		await this.mkdirp(this.ws);
 		
-		// await this.spawn('python', ['main.py'], `${process.cwd()}/ws/-KdsQ_9X8l1u3c9pmhsO`, o => console.log(o), e => console.error(e));
-	}
-	
-	mkdirp(path: string) {
-		return new Promise<void>((resolve, reject) => mkdirp(path, e => e ? reject(e) : resolve()));
-	}
-	
-	spawn(cmd: string, args: string[], cwd: string, stdout: (out: string) => void, stderr: (err: string) => void) {
-		return new Promise<void>((resolve, reject) => {
-			const child = childProcess.spawn(cmd, args, {cwd});
-			child.on('exit', resolve);
-			child.stdout.on('data', chunk => stdout(chunk.toString()));
-			child.stderr.on('data', chunk => stderr(chunk.toString()));
-		});
+		this.io.on('connection', socket => new Client(socket));
+		
+		this.io.listen(this.port);
 	}
 }
 

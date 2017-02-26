@@ -43,6 +43,7 @@
   },
   "dependencies": {
     "@types/codemirror": "^0.0.38",
+    "@types/dotenv": "^2.0.20",
     "@types/mkdirp": "^0.3.29",
     "@types/node": "^7.0.5",
     "@types/react": "^15.0.12",
@@ -51,6 +52,7 @@
     "@types/react-ga": "^1.4.7",
     "@types/react-icons": "^2.2.0",
     "@types/react-router": "^3.0.5",
+    "@types/rimraf": "^0.0.28",
     "@types/socket.io": "^1.4.28",
     "@types/source-map-support": "^0.2.28",
     "awesome-typescript-loader": "^3.0.7",
@@ -81,6 +83,7 @@
     "react-icons": "^2.2.3",
     "react-router": "^3.0.2",
     "regenerator-runtime": "^0.10.3",
+    "rimraf": "^2.6.1",
     "shallowequal": "^0.2.2",
     "socket.io": "^1.7.3",
     "source-map-support": "^0.4.11",
