@@ -13,7 +13,8 @@ function compress(data) {
 	var zip = new JSZip();
 	zip.file('a', data.in);
 	zip.generateAsync({
-		type: 'string',
+		type: 'base64',
+		compression: 'DEFLATE',
 		compressionOptions: {
 			level: 9
 		}
@@ -27,7 +28,9 @@ function compress(data) {
 
 function decompress(data) {
 	var zip = new JSZip();
-	zip.loadAsync(data.in).then(function (zip) {
+	zip.loadAsync(data.in, {
+		base64: true
+	}).then(function (zip) {
 		return zip.file('a').async('string');
 	}).then(function (out) {
 		postMessage({
