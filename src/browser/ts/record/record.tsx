@@ -169,10 +169,11 @@ export default class Record extends Component<RecordProps, {
 						}
 						<div className="clock">
 							{this.state.start ? 
-								this.state.done ?
+								(this.state.done ?
 									<span>{this.formatTime(this.state.done)}</span> :
 									<RelativeTime start={this.state.start}/>
-								 : '00:00:00'
+								 ) :
+								 <span>00:00:00</span>
 							}
 						</div>
 					</div>

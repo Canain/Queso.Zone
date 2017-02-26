@@ -11,6 +11,7 @@ $darkish: #757575;
 $editorFontSize: 18px;
 
 $surround: 24px;
+$verticalSpacing: 20px;
 
 $zDepth2: rgba(0, 0, 0, 0.156863) 0px 3px 10px, rgba(0, 0, 0, 0.227451) 0px 3px 10px;
 
@@ -23,7 +24,7 @@ body {
 
 .container {
 	max-width: calc(1280px - $surround * 2);
-	padding: $surround $surround 0 $surround;
+	padding: $verticalSpacing $surround 0 $surround;
 	margin: 0 auto;
 	
 	&:last-of-type {
@@ -129,6 +130,13 @@ hr {
 		color: $dark;
 		
 		&.clock {
+			display: flex;
+			flex-direction: row;
+			flex-wrap: nowrap;
+			justify-content: center;
+			align-items: center;
+			align-content: stretch;
+			
 			width: calc($editor * 1.5);
 			&:hover {
 				background-color: transparent;
