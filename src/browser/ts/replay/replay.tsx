@@ -8,6 +8,7 @@ import Container from '../container';
 import Editor from '../editor';
 import Button from '../button';
 import RelativeTime from '../relativetime';
+import Progress from '../progress';
 
 export interface Code {
 	code: string;
@@ -39,6 +40,7 @@ export default class Replay extends Component<{
 	started?: number;
 	time?: number;
 	audio?: HTMLAudioElement;
+	loaded?: boolean;
 }> {
 	
 	code: ReactCodeMirror.ReactCodeMirror;
@@ -83,7 +85,8 @@ export default class Replay extends Component<{
 			name,
 			replay,
 			select,
-			audio: new Audio(await this.decompress(audio as string))
+			audio: new Audio(await this.decompress(audio as string)),
+			loaded: true
 		});
 		if (initial) {
 			this.code.getCodeMirror().getDoc().setHistory(this.state.initial.history);
@@ -146,27 +149,33 @@ export default class Replay extends Component<{
 	render() {
 		return (
 			<Page redirect={this.props.params ? null : '/'} className="replay" title="Replay">
-				<Container>
-					<input value={this.state.name || ''} disabled={true}/>
-				</Container>
-				<Container>
-					<div className="editor box">
-						{this.state.playing ? 
-							<Button onClick={this.attach(this.onStop)}>
-								<StopIcon size={styles.editorIconSize}/>
-							</Button> :
-							<Button onClick={this.attach(this.onPlay)}>
-								<PlayIcon size={styles.editorIconSize}/>
-							</Button>
-						}
-						<div className="clock">
-							<span>{this.formatTime(this.state.time || 0)}</span>
+				{!this.state.loaded ? <Progress/> :
+					<Container>
+						<input value={this.state.name || 'Untitled'} disabled={true}/>
+					</Container>
+				}
+				{!this.state.loaded ? null :
+					<Container>
+						<div className="editor box">
+							{this.state.playing ? 
+								<Button onClick={this.attach(this.onStop)}>
+									<StopIcon size={styles.editorIconSize}/>
+								</Button> :
+								<Button onClick={this.attach(this.onPlay)}>
+									<PlayIcon size={styles.editorIconSize}/>
+								</Button>
+							}
+							<div className="clock">
+								<span>{this.formatTime(this.state.time || 0)}</span>
+							</div>
 						</div>
-					</div>
-				</Container>
-				<Container>
-					<Editor code={this.state.code} output={this.state.output} onCodeRef={ref => this.code = ref}/>
-				</Container>
+					</Container>
+				}
+				{!this.state.loaded ? null :
+					<Container>
+						<Editor code={this.state.code} output={this.state.output} onCodeRef={ref => this.code = ref}/>
+					</Container>
+				}
 			</Page>
 		);
 	}

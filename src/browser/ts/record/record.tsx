@@ -12,6 +12,7 @@ import Container from '../container';
 import Editor from '../editor';
 import Button from '../button';
 import RelativeTime from '../relativetime';
+import Progress from '../progress';
 
 export interface RecordProps {
 	params: {
@@ -29,6 +30,7 @@ export default class Record extends Component<RecordProps, {
 	recorder?;
 	enabled?: boolean;
 	stream?: MediaStream;
+	loading?: boolean;
 }> {
 	
 	code: ReactCodeMirror.ReactCodeMirror;
@@ -218,7 +220,8 @@ export default class Record extends Component<RecordProps, {
 		this.state.recorder.stop();
 		await this.update({
 			recording: false,
-			done: now - this.state.start
+			done: now - this.state.start,
+			loading: true
 		});
 		
 		const blob = await this.exportWAV();
@@ -234,45 +237,51 @@ export default class Record extends Component<RecordProps, {
 	render() {
 		return (
 			<Page className="record" title="Record">
-				<Container>
-					<input placeholder="Recording Name" value={this.state.name || ''} onChange={this.attach(this.onName)} disabled={!!this.state.done}/>
-				</Container>
-				<Container>
-					<div className="editor box">
-						{this.state.recording ? 
-							<Button disabled={!this.state.enabled} onClick={this.attach(this.onStop)}>
-								<StopIcon size={styles.editorIconSize} color={styles.editorRecordColor}/>
-							</Button> :
-							this.state.done ? 
-							<div>
-								<Link to={this.getReplayUrl(this.props.params.id)}>
-									<ViewIcon size={styles.editorIconSize}/>
-								</Link>
-							</div> :
-							<Button disabled={!this.state.recorder || !this.state.enabled} onClick={this.attach(this.onRecord)}>
-								<RecordIcon size={styles.editorIconSize}/>
-							</Button>
-						}
-						<div className="clock">
-							{this.state.start ? 
-								(this.state.done ?
-									<span>{this.formatTime(this.state.done)}</span> :
-									<RelativeTime start={this.state.start}/>
-								 ) :
-								 <span>{this.formatTime(0)}</span>
+				{this.state.loading ? <Progress/> :
+					<Container>
+						<input placeholder="Recording Name" value={this.state.name || ''} onChange={this.attach(this.onName)} disabled={!!this.state.done}/>
+					</Container>
+				}
+				{this.state.loading ? null :
+					<Container>
+						<div className="editor box">
+							{this.state.recording ? 
+								<Button disabled={!this.state.enabled} onClick={this.attach(this.onStop)}>
+									<StopIcon size={styles.editorIconSize} color={styles.editorRecordColor}/>
+								</Button> :
+								this.state.done ? 
+								<div>
+									<Link to={this.getReplayUrl(this.props.params.id)}>
+										<ViewIcon size={styles.editorIconSize}/>
+									</Link>
+								</div> :
+								<Button disabled={!this.state.recorder || !this.state.enabled} onClick={this.attach(this.onRecord)}>
+									<RecordIcon size={styles.editorIconSize}/>
+								</Button>
 							}
+							<div className="clock">
+								{this.state.start ? 
+									(this.state.done ?
+										<span>{this.formatTime(this.state.done)}</span> :
+										<RelativeTime start={this.state.start}/>
+									) :
+									<span>{this.formatTime(0)}</span>
+								}
+							</div>
 						</div>
-					</div>
-				</Container>
-				<Container>
-					<Editor disabled={!!this.state.done} code={this.state.code || ''} onCode={this.attach(this.onCode)} output={this.state.output} onCodeRef={ref => {
-						this.code = ref;
-						if (this.code) {
-							this.code.getCodeMirror().off('cursorActivity', this.onCursorAttached);
-							this.code.getCodeMirror().on('cursorActivity', this.onCursorAttached);
-						}
-					}}/>
-				</Container>
+					</Container>
+				}
+				{this.state.loading ? null :
+					<Container>
+						<Editor disabled={!!this.state.done} code={this.state.code || ''} onCode={this.attach(this.onCode)} output={this.state.output} onCodeRef={ref => {
+							this.code = ref;
+							if (this.code) {
+								this.code.getCodeMirror().off('cursorActivity', this.onCursorAttached);
+								this.code.getCodeMirror().on('cursorActivity', this.onCursorAttached);
+							}
+						}}/>
+					</Container>
+				}
 			</Page>
 		);
 	}
