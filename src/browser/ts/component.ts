@@ -17,6 +17,10 @@ interface Component<P, S> {
 	componentPropsChanged(nextProps: P);
 }
 
+import Compressor from './compressor/compressor';
+
+const compressor = new Compressor();
+
 abstract class Component<P, S> extends ReactComponent<P, S> {
 	
 	catch = (e: Error) => this.report(e);
@@ -25,6 +29,14 @@ abstract class Component<P, S> extends ReactComponent<P, S> {
 		super();
 		
 		this.state = {} as S;
+	}
+	
+	compress(data: string) {
+		return compressor.compress(data);
+	}
+	
+	decompress(compressed: string) {
+		return compressor.decompress(compressed);
 	}
 	
 	get replays() {
@@ -53,6 +65,10 @@ abstract class Component<P, S> extends ReactComponent<P, S> {
 	
 	getReplaySelect(id: ReplayId, offset: number) {
 		return this.getReplay(id).child('select').child(this.normalizeNumber(offset));
+	}
+	
+	getReplayAudio(id: ReplayId) {
+		return this.getReplay(id).child('audio');
 	}
 	
 	normalizeNumber(num: number) {

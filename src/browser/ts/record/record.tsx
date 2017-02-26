@@ -216,15 +216,18 @@ export default class Record extends Component<RecordProps, {
 		});
 		const now = this.now;
 		this.state.recorder.stop();
-		const blob = await this.exportWAV();
-		
-		const audio = await this.blobToBase64(blob);
-		console.log(audio);
-		
 		await this.update({
 			recording: false,
 			done: now - this.state.start
 		});
+		
+		const blob = await this.exportWAV();
+		
+		const audio = await this.blobToBase64(blob);
+		const compressed = await this.compress(audio);
+		
+		await this.set(this.getReplayAudio(this.replay), compressed);
+		
 		browserHistory.push(this.getReplayUrl(this.props.params.id));
 	}
 	
