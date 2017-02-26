@@ -10,6 +10,7 @@ Queso.Zone is a web platform for recording and sharing code tutorials using reco
 * Record and Playback Cursor by Cursor Key by Key Code Editing
 * Record and Compile Live Code on the Browser
 * Responsive and Clean Design
+* Demo any NPM Library
 * Currently only Node.js/JavaScript is supported, but more languages can be supported
 
 ## Usage
