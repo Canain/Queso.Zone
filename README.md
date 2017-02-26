@@ -39,6 +39,9 @@ Queso.Zone is a web platform for recording and sharing code tutorials using reco
 * Run `yarn` to install dependencies
 * Run `yarn run start:debug` to start up the local debug instance
 
+## Contributors
+[CONTRIBUTORS.md](CONTRIBUTORS.md)
+
 ## Contributor Guide
 [CONTRIBUTING.md](CONTRIBUTING.md)
 
