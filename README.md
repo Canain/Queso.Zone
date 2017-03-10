@@ -2,6 +2,8 @@
 
 [Demo Replay](https://queso.zone/r/-KdvoPrg8toIicmqF2q2)
 
+Demo is only to show the replay feature. Because the server is currently on heroku, cached package installs aren't gauranteed to be there unless you just recorded it yourself.
+
 # Queso.Zone
 Queso.Zone is a web platform for recording and sharing code tutorials using recorded audio and a code replay system.
 * Open Source
