@@ -42,7 +42,7 @@ abstract class Component<P, S> extends ReactComponent<P, S> {
 	}
 	
 	get server() {
-		return process.env.NODE_ENV === 'production' ? 'https://compile.queso.zone' : 'http://localhost:8090';
+		return process.env.NODE_ENV === 'production' ? 'https://quesozone.herokuapp.com' : 'http://localhost:8090';
 	}
 	
 	get replays() {
