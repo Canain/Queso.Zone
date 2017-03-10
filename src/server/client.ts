@@ -22,16 +22,18 @@ export default class Client extends Base {
 		return `${this.ws}/${this.id}`;
 	}
 	
-	record(id: string) {
+	async record(id: string) {
 		this.id = id;
-		this.mkdirp(this.dir);
+		await this.mkdirp(this.dir);
 		this.socket.emit('record');
 	}
 	
-	replay(id: string, replay: string) {
+	async replay(id: string, replay: string) {
 		this.id = id;
 		this.cleanup = true;
-		this.cp(`${this.ws}/${replay}`, this.dir);
+		const copy = `${this.ws}/${replay}`;
+		await this.mkdirp(copy);
+		await this.cp(copy, this.dir);
 		this.socket.emit('replay');
 	}
 	
